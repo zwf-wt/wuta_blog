@@ -18,18 +18,26 @@ export const nav: DefaultTheme.NavItem[] = [
   //     }
   //   ]
   // },
-  // {
-  //   text: '关于我',
-  //   items: [
-  //     { text: 'Github', link: 'https://github.com/Jacqueline712' },
-  //     {
-  //       text: '掘金',
-  //       link: 'https://juejin.cn/user/3131845139247960/posts'
-  //     },
-  //     {
-  //       text: '飞书社区',
-  //       link: 'https://pzfqk98jn1.feishu.cn/wiki/space/7193915595975491587?ccm_open_type=lark_wiki_spaceLink'
-  //     }
-  //   ]
-  // }
+  {
+    text: '关于我',
+    items: [
+      {
+        text: '掘金',
+        link: 'https://juejin.cn'
+      },
+      {
+        text: '无它工具',
+        link: 'https://zhang_wen_fa.gitee.io/wuta_tools_view2/#/'
+      }
+    ]
+  },
+  {
+    text: '后端',
+    items: [
+      {
+        text: 'SQL常用语句',
+        link: '/views/sql/common-sql'
+      },
+    ]
+  },
 ];

@@ -1,7 +1,9 @@
 import { defineConfig } from 'vitepress'
 import {
   // 首页右上方导航栏
-  nav
+  nav,
+  // 侧边栏
+  sidebar,
 } from './relaConf/index.mts'
 
 // https://vitepress.dev/reference/site-config
@@ -18,15 +20,16 @@ export default defineConfig({
     //   { text: 'Examples', link: '/markdown-examples' }
     // ],
 
-    sidebar: [
-      {
-        text: 'Examples',
-        items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
-        ]
-      }
-    ],
+    sidebar,
+    // : [
+    //   {
+    //     text: 'Examples',
+    //     items: [
+    //       { text: 'Markdown Examples', link: '/markdown-examples' },
+    //       { text: 'Runtime API Examples', link: '/api-examples' }
+    //     ]
+    //   }
+    // ],
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/vuejs/vitepress' }

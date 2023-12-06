@@ -22,9 +22,17 @@ hero:
       link: /
 
 features:
-  - icon: 🤹♀️
+  - icon: 🤹
     title: Web前端
     details: 搬砖。
     link: /
+  - icon: 🎨
+    title: git
+    details: git规范
+    link: /views/git/git_norm
+  - icon: 🧩
+    title: 设计模式
+    details: 某种业务的银弹
+    link: /views/design_pattern
 ---
 
