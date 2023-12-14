@@ -125,7 +125,7 @@ Options:
 ```
 
 ### 6. 自定义`wt text`命令，输入什么，就在命令行输出什么
-1. 修改 `bin/index.js` 文件内容
+> 修改 `bin/index.js` 文件内容
 ```js
 ...
 
@@ -140,7 +140,9 @@ program
 
 ...
 ```
-2. 执行 `wt text` 命令
+
+### 7. 测试
+> 执行 `wt text` 命令
 ```bash
 wt text 123afdfdf
 # 输出内容
@@ -151,6 +153,9 @@ wt text 123afdfdf -f
 # 输出内容
 123afdfdf { f: true }
 ```
+
+### 8. 总结
+> 至此为止，已成功通过`Node`实现一个最简单的`Cli`工具。后续只需丰富不同的命令即可。
 
 ## 命令行常用插件
 1. chalk: 用于修改终端输出字符样式
