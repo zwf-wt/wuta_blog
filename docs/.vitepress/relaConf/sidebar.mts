@@ -36,5 +36,20 @@ export const sidebar: DefaultTheme.Sidebar = {
         },
       ]
     }
+  ],
+  '/views/after-end': [
+    {
+      text: 'Python',
+      items: [
+        {
+          text: 'Python基础',
+          link: '/views/after-end/python/PythonBasic'
+        },
+        {
+          text: 'Pandas代码片段',
+          link: '/views/after-end/python/PandasCodeSnippet'
+        }
+      ]
+    }
   ]
 }

@@ -38,6 +38,10 @@ export const nav: DefaultTheme.NavItem[] = [
         text: 'SQL常用语句',
         link: '/views/sql/common-sql'
       },
+      {
+        text: 'Pandas代码片段',
+        link: '/views/after-end/python/PandasCodeSnippet'
+      },
     ]
   },
 ];

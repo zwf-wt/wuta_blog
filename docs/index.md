@@ -8,7 +8,7 @@ title: "无它博客"
 hero:
   name: "无它博客"
   text: "Hi, 终于等到你"
-  tagline: /菜鸡/
+  tagline: 无它，惟手熟尔 
   image:
     src: /logo.png
     alt: "logo"
