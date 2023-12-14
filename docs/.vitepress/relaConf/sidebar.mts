@@ -54,6 +54,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: '通过Node实现一个CLI工具',
           link: '/views/front-end/cli'
         },
+        {
+          text: '工作',
+          link: '/views/front-end/work'
+        },
       ]
     }
   ],
