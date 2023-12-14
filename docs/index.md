@@ -33,6 +33,6 @@ features:
   - icon: 🧩
     title: 设计模式
     details: 某种业务的银弹
-    link: /views/design_pattern
+    link: /views/design-pattern/index
 ---
 
