@@ -50,6 +50,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: '前端API',
           link: '/views/front-end/front_api'
         },
+        {
+          text: '通过Node实现一个CLI工具',
+          link: '/views/front-end/cli'
+        },
       ]
     }
   ],
