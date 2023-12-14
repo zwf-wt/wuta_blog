@@ -37,6 +37,22 @@ export const sidebar: DefaultTheme.Sidebar = {
       ]
     }
   ],
+  // 前端
+  '/views/front-end': [
+    {
+      text: '前端',
+      items: [
+        {
+          text: '介绍',
+          link: '/views/front-end/index'
+        },
+        {
+          text: '前端API',
+          link: '/views/front-end/front_api'
+        },
+      ]
+    }
+  ],
   // 后端
   '/views/after-end': [
     {

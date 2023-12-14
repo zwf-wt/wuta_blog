@@ -25,7 +25,7 @@ features:
   - icon: 🤹
     title: Web前端
     details: 搬砖。
-    link: /
+    link: /views/front-end/index
   - icon: 🎨
     title: git
     details: git规范
