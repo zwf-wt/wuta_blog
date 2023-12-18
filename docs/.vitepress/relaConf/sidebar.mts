@@ -12,6 +12,10 @@ export const sidebar: DefaultTheme.Sidebar = {
         {
           text: 'SQL面试题',
           link: '/views/sql/sql-interview'
+        },
+        {
+          text: '实际遇到的问题',
+          link: '/views/sql/work'
         }
       ]
     },
