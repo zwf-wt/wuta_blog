@@ -34,5 +34,9 @@ features:
     title: 设计模式
     details: 某种业务的银弹
     link: /views/design-pattern/index
+  - icon: 📖
+    title: 搭建博客
+    details: 让每个前后端小伙伴都拥有一个属于自己的博客
+    link: https://mp.weixin.qq.com/s/KY0GAEYC6V4Xj1oGVtPgDg
 ---
 
