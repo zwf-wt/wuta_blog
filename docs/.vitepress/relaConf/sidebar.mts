@@ -62,6 +62,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: '工作',
           link: '/views/front-end/work'
         },
+        {
+          text: 'JS面试题',
+          link: '/views/front-end/interview-questions/js'
+        },
       ]
     }
   ],
