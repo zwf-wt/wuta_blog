@@ -13,23 +13,12 @@ export default defineConfig({
   description: "A VitePress Site",
   themeConfig: {
     logo: '/avatar.jpg',
-    // https://vitepress.dev/reference/default-theme-config
     nav,
-    // : [
-    //   { text: 'Home', link: '/' },
-    //   { text: 'Examples', link: '/markdown-examples' }
-    // ],
-
     sidebar,
-    // : [
-    //   {
-    //     text: 'Examples',
-    //     items: [
-    //       { text: 'Markdown Examples', link: '/markdown-examples' },
-    //       { text: 'Runtime API Examples', link: '/api-examples' }
-    //     ]
-    //   }
-    // ],
+    outline: {
+      level: [2, 6],
+      label: '目录'
+    },
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/vuejs/vitepress' }

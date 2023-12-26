@@ -71,6 +71,23 @@ const array = [3, 5, 2, 10, 8, 7, 6, 1, 9, 4];
 const sortedArray = quickSort(array);
 console.log(sortedArray); // 输出：[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 ```
+### 2.1 冒泡排序
+```js
+function bubbleSort(arr) {
+  const len = arr.length;
+  for (let i = 0; i < len - 1; i++) {
+    for (let j = 0; j < len - 1 - i; j++) {
+      if (arr[j] > arr[j + 1]) {
+        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+      }
+    }
+  }
+  return arr;
+}
+const arr = [5, 3, 8, 4, 2];
+console.log(bubbleSort(arr));
+
+```
 ## 3. 买卖股票的最佳时机
 ```js
 /**给定一个数组 prices ，它的第 i 个元素 prices[i] 表示一支给定

@@ -402,3 +402,15 @@ Csrf (跨站点请求伪造) 攻击者在用户已经登录目标网站之后，
  */
 console.log([1, 2, 3].map(parseInt)) // [1, NaN, NaN]
 ```
+
+## 31. `Object.create(null)`和`{}`区别？
+`Object.create(null)`创建一个没有原型的新对象。这意味着生成的对象没有继承的属性或方法。它通常用作简单的字典对象，因为它允许设置和访问键，而不会与继承的属性或方法发生任何潜在冲突。
+```js
+const obj = Object.create(null); // 返回了一个没有任何属性的对象
+console.log(obj.__proto__); // undefined
+```
+`{}`用`object`创建了一个新对象。`{}`的原型是`Object.prototype`。这意味着生成的对象继承了`Object.prototype`的所有属性和方法。这在某些情况下是有用的，但如果不小心，也可能导致意想不到的行为。
+```js
+const obj2 = {};
+console.log(obj2.__proto__ === Object.prototype) // true
+```
