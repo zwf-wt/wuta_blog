@@ -66,6 +66,18 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: 'JS面试题',
           link: '/views/front-end/interview-questions/js'
         },
+        {
+          text: 'Vue面试题',
+          link: '/views/front-end/interview-questions/vue'
+        },
+        {
+          text: 'Webpack面试题',
+          link: '/views/front-end/interview-questions/webpack'
+        },
+        {
+          text: '算法题目',
+          link: '/views/front-end/interview-questions/alg'
+        },
       ]
     }
   ],
