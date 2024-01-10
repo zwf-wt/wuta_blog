@@ -414,3 +414,18 @@ console.log(obj.__proto__); // undefined
 const obj2 = {};
 console.log(obj2.__proto__ === Object.prototype) // true
 ```
+## 32. 函数防抖
+```js
+function debounce(func, duration = 500) {
+  let timerId;
+  // return 返回的函数一定不要用箭头函数，因为保证 this 一致
+  return function(...args) {
+    clearTimeout(timerId);
+
+    // setTimeout 一定要用箭头函数
+    timerId = setTimeout(() => {
+      func.apply(this, args)
+    }, duration);
+  };
+}
+```

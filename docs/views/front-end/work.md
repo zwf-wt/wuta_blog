@@ -32,3 +32,28 @@ unicode = '\u' + '0000'.substr(0, 4 - unicode.length) + unicode;
 console.log(`\u4e09`) // 使用 ES6+ 模板字符串转换
 // 输出结果为：三
 ```
+
+### 3. 使用位运算实现权限组合
+```js
+// 定义基础权限
+const READ = 0b1;
+const CREATE = 0b10;
+const UPDATE = 0b100;
+const DELETE = 0b1000;
+
+// 通过上面的基础权限构造出复杂权限
+const xxx = READ | UPDATE | DELETE
+
+// 判断是否有读权限
+console.log((xxx & READ) === 0)
+```
+
+### 4. 怎么实现常见登录业务的
+## 模块
+### 1. depcheck
+> 超级好用的依赖检查工具`depcheck`
+```txt
+npm i -g depcheck
+
+depcheck
+```
