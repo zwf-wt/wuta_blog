@@ -17,8 +17,10 @@ export default defineConfig({
     sidebar,
     outline: {
       level: [2, 6],
-      label: '目录'
+      label: '目录',  
     },
+    sidebarMenuLabel: '菜单',
+    returnToTopLabel: '返回顶部',
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/vuejs/vitepress' }

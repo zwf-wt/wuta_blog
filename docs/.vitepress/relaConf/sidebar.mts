@@ -139,6 +139,42 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: '14. 光线投射实现3d场景交互事件',
           link: '/views/front-end/threeJS/14. 光线投射实现3d场景交互事件'
         },
+        {
+          text: '15. 补间动画Tween应用',
+          link: '/views/front-end/threeJS/15. 补间动画Tween应用'
+        },
+        {
+          text: '16. 全面讲解UV与应用',
+          link: '/views/front-end/threeJS/16. 全面讲解UV与应用'
+        },
+        {
+          text: '17. 法向量属性应用与法向量辅助器',
+          link: '/views/front-end/threeJS/17. 法向量属性应用与法向量辅助器'
+        },
+        {
+          text: '18. 几何体顶点转化_顶点位移_旋转_缩放',
+          link: '/views/front-end/threeJS/18. 几何体顶点转化_顶点位移_旋转_缩放'
+        },
+        {
+          text: '19. 包围盒使用与世界矩阵转换',
+          link: '/views/front-end/threeJS/19.包围盒使用与世界矩阵转换'
+        },
+        {
+          text: '20. 几何体居中与获取几何体中心',
+          link: '/views/front-end/threeJS/20.几何体居中与获取几何体中心'
+        },
+        {
+          text: '21. 获取多个物体包围盒',
+          link: '/views/front-end/threeJS/21.获取多个物体包围盒'
+        },
+        {
+          text: '22. 边缘几何体与线框几何体',
+          link: '/views/front-end/threeJS/22.边缘几何体与线框几何体'
+        },
+        {
+          text: '23. 灯光与阴影的设置',
+          link: '/views/front-end/threeJS/23.灯光与阴影的设置'
+        },
       ]
     }
   ],
