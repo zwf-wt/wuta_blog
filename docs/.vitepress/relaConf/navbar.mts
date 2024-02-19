@@ -44,4 +44,17 @@ export const nav: DefaultTheme.NavItem[] = [
       },
     ]
   },
+  {
+    text: '前端',
+    link: '/views/front-end/index'
+  },
+  {
+    text: '书籍',
+    items: [
+      {
+        text: '图解HTTP',
+        link: '/views/books/img-http/index'
+      }
+    ]
+  }
 ];

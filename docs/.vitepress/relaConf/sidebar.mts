@@ -233,5 +233,11 @@ export const sidebar: DefaultTheme.Sidebar = {
         }
       ]
     }
+  ],
+  '/views/books/img-http': [
+    {
+      text: '第一章：了解Web及网络基础',
+      link: '/views/books/img-http/第一章：了解Web及网络基础'
+    }
   ]
 }
