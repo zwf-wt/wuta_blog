@@ -53,7 +53,7 @@ export const nav: DefaultTheme.NavItem[] = [
       },
       {
         text: '面试',
-        link: '/views/interview-questions/js'
+        link: '/views/interview-questions/js/js_basic'
       },
     ]
   },
