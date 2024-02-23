@@ -46,7 +46,16 @@ export const nav: DefaultTheme.NavItem[] = [
   },
   {
     text: '前端',
-    link: '/views/front-end/index'
+    items: [
+      {
+        text: '前端基础',
+        link: '/views/front-end/index',
+      },
+      {
+        text: '面试',
+        link: '/views/interview-questions/js'
+      },
+    ]
   },
   {
     text: '书籍',

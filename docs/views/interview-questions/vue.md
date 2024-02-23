@@ -141,6 +141,38 @@ html复制代码
 - 在 Vue2 当中，nextTick 可以理解为就是收集异步任务到队列当中并且开启异步任务去执行它们。它可以同时收集组件渲染的任务，以及用户手动放入的任务。组件渲染的任务是由 watcher 的 update 触发，并且将回调函数包装为异步任务，最后推到 nextTick 的队列里，等待执行。
 - 而在 Vue3 当中，nextTick 则是利用 promise 的链式调用，将用户放入的回调放在更新视图之后的 then 里面调用，用户调用多少次 nextTick，就接着多少个 then。
 
+在 Vue.js 中，$nextTick 方法用于在 DOM 更新之后执行代码。它的原理是利用 JavaScript 的事件循环机制，在当前代码执行完成并让出主线程之后，利用 microtask 在下一个微任务队列中执行回调函数。
+
+具体来说，当我们调用 $nextTick 方法时，Vue 会将传入的回调函数放入一个队列中，然后在当前代码执行结束后，立即执行微任务（microtask）队列中的任务。这确保了在下一个微任务队列中，DOM 已经更新完成，因此可以安全地访问和操作最新的 DOM 元素。
+
+在实际应用中，$nextTick 方法常用于以下场景：
+
+1. 在修改数据之后立即获取更新后的 DOM 状态。
+2. 在 Vue 生命周期钩子函数中操作更新后的 DOM 元素。
+3. 在组件中使用 $refs 访问更新后的子组件实例或 DOM 元素。
+```js
+new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello, Vue!'
+  },
+  mounted() {
+    this.message = 'Hello, World!';
+    this.$nextTick(() => {
+      // 在下一个微任务队列中执行，此时 DOM 已经更新完成
+      console.log(this.$refs.myElement.innerText); // 输出：Hello, World!
+    });
+  },
+  template: `
+    <div id="app">
+      <div ref="myElement">{{ message }}</div>
+    </div>
+  `
+});
+
+```
+总之，$nextTick 方法的原理是基于 JavaScript 的事件循环机制和微任务队列实现的，它为开发者提供了一种方便的方式来处理 DOM 更新后的操作，确保操作可以在更新后的 DOM 上进行。
+
 #### 3. Vue 响应式系统的原理
 Vue 实现响应式主要是采用数据劫持结合发布者-订阅者模式的方式。具体实现就是整合`Observer`，`Compiler` 和 `Watcher` 三者。
 
