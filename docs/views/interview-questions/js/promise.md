@@ -1,6 +1,6 @@
 # Promise
 
-### 1. Promise的了解
+## 1. Promise的了解
 1. 什么是`Promise`?
 我们都知道，`Promise`是承诺的意思，承诺它过一段时间会给你一个结果。
 `Promise`是一种解决异步编程的方案，相比回调函数和事件更合理和更强大。
@@ -14,7 +14,7 @@
 - 如果不设置回调函数，`Promise`内部抛出的错误，不会反映到外部
 - 当处于`pending`(等待)状态时，无法得知目前进展到哪一个阶段是刚刚开始还是即将完成
 
-### 2. Promise 的 all 和 race 有什么区别
+## 2. Promise 的 all 和 race 有什么区别
 `Promise.all()` 和 `Promise.race()` 都是用于处理多个 Promise 对象的方法，但它们的行为有所不同：
 1. `Promise.all()`:
 - Promise.all() 方法接收一个包含多个 Promise 对象的可迭代对象（比如数组）作为参数，并返回一个新的 Promise 对象。
