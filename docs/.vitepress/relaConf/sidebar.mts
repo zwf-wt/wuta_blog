@@ -311,15 +311,29 @@ export const sidebar: DefaultTheme.Sidebar = {
             },
           ]
         },
-        {
-          text: '计算机网络',
-          link: '/views/interview-questions/network'
-        },
+        
       ]
     },
     {
       text: '后端面试',
       items: []
+    },
+    {
+      text: '计算机网络',
+      link: '/views/interview-questions/network'
+    },
+    {
+      text: '数据结构与算法',
+      items: [
+        {
+          text: '数据结构',
+          link: '/views/interview-questions/dataStructure-algorithm/dataStructure'
+        },
+        {
+          text: '算法题',
+          link: '/views/interview-questions/dataStructure-algorithm/alg'
+        }
+      ]
     }
   ]
 }
