@@ -117,6 +117,21 @@ watch 和 watchEffect 都是监听器，watchEffect 是一个副作用函数。�
 在 created 的时候，视图中的 html 并没有染出来，所以此时如果直接去操作 html 的dom 节点，一定找不到相关的元素
 而在 mounted 中，由于此时 html 已经染出来了，所以可以直接操作 dom 节点，(此时 document.getelementByld 即可生效)
 
+##### 3. vue2.0与vue3.0生命周期的区别
+Vue 3.0 相较于 Vue 2.0 在生命周期方面进行了一些重大的变化和优化。下面是 Vue 2.0 与 Vue 3.0 生命周期的主要区别：
+
+1. 新增的生命周期钩子：
+
+- Vue 3.0 新增了 beforeUnmount 钩子，在组件卸载之前调用。
+- Vue 3.0 移除了 beforeDestroy 钩子，取而代之的是 beforeUnmount，为了更清晰地表示组件卸载前的操作。
+2. 生命周期钩子执行顺序变化：
+
+- 在 Vue 2.0 中，生命周期钩子的执行顺序是 beforeCreate -> created -> beforeMount -> mounted -> beforeUpdate -> updated -> beforeDestroy -> destroyed。
+- 而在 Vue 3.0 中，生命周期钩子的执行顺序是 beforeCreate -> created -> beforeMount -> onMounted -> beforeUpdate -> updated -> beforeUnmount -> unmounted。
+3. Composition API 的影响：
+
+- Vue 3.0 引入了 Composition API，它允许开发者将相关逻辑组织在一起，并按照功能而非生命周期进行组织，这对生命周期的管理有一定影响。
+> 总体来说，Vue 3.0 在生命周期方面做了一些调整，使得生命周期更加清晰和统一，同时也引入了 Composition API 来提供更灵活的组织代码的方式。
 
 ### 1.4 原理
 #### 1. Vue3.0 是如何变得更快的?(底层，源码)

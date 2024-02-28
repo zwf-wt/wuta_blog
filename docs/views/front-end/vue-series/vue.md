@@ -638,3 +638,5 @@ export default {
 ![mixins](/assets/vue/mixins.png)
 
 ## 6. 生命周期
+
+## 7. 自定义指令

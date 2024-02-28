@@ -114,3 +114,50 @@ Webpack是把项目当做一个整体，通过给定一个主文件，webpack将
 ## 3. Commonjs 与 ES6 模块区别?
 common 模块是拷贝，可以修改值，es6 模块是引用，只读状态不能修改值
 commonjs 模块是运行时加载，es6 模块是编译时输出接
+## webpack优化有哪些
+
+对于Webpack的优化，可以考虑以下几个方面：
+
+1. 减小打包体积：可以通过使用Webpack的Tree Shaking功能来消除未使用的代码，通过配置合适的mode（如production）来启用代码压缩，以及按需引入第三方库等方式来减小打包体积。
+
+2. 加载性能优化：可以通过Webpack的代码分割（Code Splitting）功能将代码拆分成多个较小的块，实现按需加载。使用动态导入（Dynamic Import）或者使用React的Suspense和Vue的异步组件等技术，将组件进行懒加载，从而提高页面的加载速度。
+
+3. 缓存优化：可以通过配置Webpack的output.filename和output.chunkFilename来使用hash、chunkhash等方式生成文件名，使文件名随内容变化而变化，以便利用浏览器缓存机制。同时，可以通过配置webpack-manifest-plugin插件来生成一个清单文件，用于记录每个文件的hash值，以便在构建时进行对比，只更新有变化的文件。
+
+4. 并行构建：可以使用HappyPack或者Thread Loader等工具，将Webpack的构建过程并行化，从而加快构建速度，特别是在多核CPU的机器上。
+
+5. 模块解析优化：可以通过配置resolve.alias来设置模块的别名，减少模块的搜索范围。此外，也可以使用resolve.extensions来配置模块的后缀名，减少文件查找的时间。
+
+6. 资源优化：可以通过使用url-loader或者file-loader等loader，将小图片转为base64编码，以减少HTTP请求。此外，还可以对图片、字体等资源进行压缩，减小文件大小。
+
+7. 代码优化：可以通过Webpack的插件（如UglifyJsPlugin）来进行代码压缩和混淆，从而提高代码的运行效率。
+8. 按需加载：可以使用Webpack的动态导入（Dynamic Import）功能，实现按需加载模块，从而减小初始加载的体积。此外，也可以使用React的Suspense和Vue的异步组件等技术来实现组件的按需加载。
+
+9. 多线程构建：可以使用Webpack的parallel-webpack插件，将Webpack的构建过程分配到多个子进程中执行，从而加快构建速度。
+
+10. 缓存优化：可以使用Webpack的缓存特性来加快构建速度。通过配置cache-loader或者hard-source-webpack-plugin等插件，将中间结果缓存起来，以便下次构建时复用。
+
+11. 模块热替换：可以使用Webpack的Hot Module Replacement（HMR）功能，实现模块级别的热替换，从而加快开发效率。
+
+12. 长缓存优化：可以使用Webpack的contenthash等方式来生成文件名，使文件名与文件内容相关联，从而方便利用浏览器缓存机制。
+
+13. 资源CDN优化：可以将静态资源（如图片、字体、JavaScript库等）上传到CDN上，并在Webpack的output.publicPath中指定CDN的地址，从而减轻服务器的负载，提高页面加载速度。
+
+14. 生产环境优化：在webpack配置中使用mode: 'production'，以启用内置的优化。此外，使用UglifyJsPlugin或TerserPlugin来压缩和混淆代码。
+
+15. 代码拆分（Code Splitting）：通过使用Webpack的动态导入功能（Dynamic Imports）或SplitChunksPlugin插件，将代码拆分为多个文件，以便实现按需加载和减小初始加载时间。
+
+16. Tree Shaking：通过配置webpack，确保只将项目中用到的代码打包到最终的bundle中，去除未引用的代码，减小打包体积。
+
+17. 持久化缓存：使用contenthash或chunkhash来生成文件名，以确保浏览器缓存生效，减少不必要的网络请求。
+
+18. 使用DllPlugin预先编译第三方库：将第三方库（如React、Vue等）单独打包成一个文件，并且在开发过程中不经常改变，以提高构建速度。
+
+19. 多进程/多实例构建：通过webpack-parallel-uglify-plugin等插件，利用多进程或多实例同时处理多个任务，提高构建效率。
+
+20. 合理配置resolve.modules和resolve.extensions：减少模块解析的时间。
+
+21. 使用HardSourceWebpackPlugin：使用此插件可以在构建过程中缓存模块，以加快二次构建速度。
+
+22. 避免不必要的loader处理：仔细选择需要的loader，避免过多或不必要的loader处理。
+> 这只是一些常见的Webpack优化策略，具体的优化方法和策略会根据项目的需求和特点有所差异。在进行优化时，可以结合使用Webpack的相关插件和工具，以及借助性能分析工具（如Webpack Bundle Analyzer）来帮助定位和解决性能瓶颈

@@ -312,6 +312,11 @@ export const sidebar: DefaultTheme.Sidebar = {
           ]
         },
         
+        {
+          text: '某公司题库',
+          link: '/views/interview-questions/CompanyQuestionBank'
+        },
+        
       ]
     },
     {
