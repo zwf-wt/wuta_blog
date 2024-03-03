@@ -88,6 +88,15 @@ export const sidebar: DefaultTheme.Sidebar = {
           ]
         },
         {
+          text: '性能优化',
+          items: [
+            {
+              text: '指标',
+              link: '/views/front-end/performance-optimization/indicator'
+            }
+          ]
+        },
+        {
           text: 'threeJS',
           items: [
             {
