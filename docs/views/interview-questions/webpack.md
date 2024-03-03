@@ -109,12 +109,12 @@ sideEffects用于告知webpack compiler哪些模块时有副作用，配置方�
 6. 提取公共代码
 通过配置CommonsChunkPlugin插件，将多个页面的公共代码抽离成单独的文件
 
-## 2. 说一下 webpack 的打包原理
+## 6. 说一下 webpack 的打包原理
 Webpack是把项目当做一个整体，通过给定一个主文件，webpack将从这个主文件开始找到项目中所有依赖的文件，使用loaders 类外理，最后打包成一个或者多个浏览器可识别的js 文件
-## 3. Commonjs 与 ES6 模块区别?
+## 7. Commonjs 与 ES6 模块区别?
 common 模块是拷贝，可以修改值，es6 模块是引用，只读状态不能修改值
 commonjs 模块是运行时加载，es6 模块是编译时输出接
-## webpack优化有哪些
+## 8. webpack优化有哪些
 
 对于Webpack的优化，可以考虑以下几个方面：
 

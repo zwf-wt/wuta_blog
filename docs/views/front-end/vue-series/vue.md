@@ -638,5 +638,206 @@ export default {
 ![mixins](/assets/vue/mixins.png)
 
 ## 6. 生命周期
+Vue.js 是一个用于构建用户界面的渐进式框架，其每个实例在创建时都会经历一系列的初始化过程——例如，需要设置数据监听、编译模板、将实例挂载到 DOM 并在数据变化时更新 DOM 等。这些过程发生的时刻被称为“生命周期钩子”，允许用户在特定阶段添加自己的代码。
+### vue2.0 生命周期钩子
+1. beforeCreate
+
+- 这个阶段发生在实例初始化之后，数据观测 (data observer) 和事件/侦听器配置之前。
+- 在这一步，data 和 methods 中的内容还不能访问。
+
+2. created
+
+- 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测 (data observer)，属性和方法的运算，watch/event 事件回调。
+- 这时可以进行数据请求或是开始操作内部数据等。
+
+3. beforeMount
+
+- 在挂载开始之前被调用：相关的 render 函数首次被调用。
+- 该钩子在服务器端渲染期间不被调用。
+
+4. mounted
+
+- el 被新创建的 vm.$el 替换，并挂载到实例上去之后调用该钩子。
+- 如果根实例挂载了一个文档内元素，当 mounted 被调用时 vm.$el 也在文档内。
+- 注意 mounted 不会保证所有的子组件也都被挂载完成。
+
+5. beforeUpdate
+
+- 数据更新时调用，发生在虚拟 DOM 打补丁之前。
+- 你可以在这个钩子中进一步地更改状态，这不会触发附加的重渲染过程。
+
+6. updated
+
+- 由于数据更改导致的虚拟 DOM 重新渲染和打补丁，在这之后会调用该钩子。
+- 当这个钩子被调用时，组件 DOM 已经更新，所以你现在可以执行依赖于 DOM 的操作。
+- 但是在此期间还是可能存在子组件尚未更新完成。
+
+7. beforeDestroy
+
+- 实例销毁之前调用。在这一步，实例仍然完全可用。
+- 这是清理定时器或解绑全局事件监听器的好时机。
+
+8. destroyed
+
+- Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。
+
+- 通常用于执行清理工作和资源释放。
+
+### vue3.0 生命周期钩子
+Vue 3 对生命周期钩子进行了一些更新和调整，以更好地适应其 Composition API。虽然大部分的生命周期钩子都保留了下来，但是它们的命名有所改变，并且引入了一些新的钩子
+#### 与 Vue2 相对应的生命周期钩子
+1. beforeCreate 和 created
+
+在 Vue 3 中，这些钩子的概念通过 setup() 函数被替代。setup() 函数在组件实例创建之初就被调用，这时候组件的 props 已经被解析。
+
+2. beforeMount
+
+在挂载（mounting）过程开始之前调用。此时，组件的模板和数据已经编译成了一个渲染函数，但还未执行渲染。
+
+3. mounted
+
+在组件被挂载到 DOM 上之后调用。此时，所有的处理都已完成，组件已经可见。
+
+4. beforeUpdate
+
+在组件更新之前调用。此时，组件的数据已经改变，但是 DOM 还没有更新。
+
+5. updated
+
+在组件的数据变化导致的虚拟 DOM 重新渲染和打补丁之后调用。
+
+6. beforeUnmount (Vue 2 中为 beforeDestroy)
+
+在卸载（unmounting）组件实例之前调用。此时，组件实例仍然完全可用。
+
+7. unmounted (Vue 2 中为 destroyed)
+
+在组件实例被卸载之后调用。此时，组件已经被完全销毁。
+
+#### 新增的生命周期钩子
+1. onActivated
+
+用于 `keep-alive` 缓存的组件激活时调用。
+2. onDeactivated
+
+用于 `<keep-alive>` 缓存的组件停用时调用。
+
+3. onRenderTracked
+
+当虚拟 DOM 渲染函数被跟踪时调用。
+
+4. onRenderTriggered
+
+当虚拟 DOM 渲染函数被触发重新渲染时调用。
+
+#### 用 Composition API 的生命周期钩子
+在 Vue 3 的 Composition API 中，生命周期钩子有了对应的函数，可以直接在 setup() 函数中使用。例如，mounted 钩子在 Composition API 中可以通过 onMounted 函数来使用：
+```js
+import { onMounted } from 'vue';
+
+export default {
+  setup() {
+    onMounted(() => {
+      console.log('组件已挂载');
+    });
+  }
+}
+```
+
+这些函数包括：
+
+- onBeforeMount
+- onMounted
+- onBeforeUpdate
+- onUpdated
+- onBeforeUnmount
+- onUnmounted
+- onActivated
+- onDeactivated
+- onRenderTracked
+- onRenderTriggered
+
+使用 Composition API 的生命周期钩子提供了更灵活的组织代码的方式，尤其是在使用 setup() 函数定义组件逻辑时。这些生命周期钩子函数使得将逻辑相关的代码组织在一起变得更加简单和直观。
 
 ## 7. 自定义指令
+Vue 自定义指令提供了一种机制，允许开发者对普通 DOM 元素进行底层操作。这在你需要直接操作DOM时非常有用，比如，当你需要集中处理 DOM 事件监听或是实现特定的动画效果时。Vue.js 允许你注册自己的自定义指令，扩展 Vue 基本功能。
+### 注册自定义指令
+Vue 自定义指令可以全局或组件内部注册。
+#### 全局注册
+使用 Vue.directive(id, [definition]) 进行全局注册：
+```js
+Vue.directive('my-directive', {
+  bind(el, binding, vnode, oldVnode) {
+    // 在绑定元素的父组件被挂载时调用
+  },
+  inserted(el, binding, vnode, oldVnode) {
+    // 被绑定元素插入父节点时调用
+  },
+  update(el, binding, vnode, oldVnode) {
+    // 所在组件的 VNode 更新时调用
+  },
+  componentUpdated(el, binding, vnode, oldVnode) {
+    // 指令所在组件的 VNode 及其子 VNode 全部更新后调用
+  },
+  unbind(el, binding, vnode, oldVnode) {
+    // 只调用一次，指令与元素解绑时调用
+  }
+});
+
+```
+#### 组件内注册
+在组件的 directives 选项中注册：
+```js
+export default {
+  directives: {
+    'my-directive': {
+      bind(el, binding, vnode) {
+        // 操作
+      }
+    }
+  }
+}
+```
+### 钩子函数参数
+自定义指令提供了几个钩子函数（可选）：
+
+- bind: 只调用一次，指令第一次绑定到元素时调用。
+- inserted: 被绑定元素插入父节点时调用（仅保证父节点存在，但不一定已被插入文档中）。
+- update: 所在组件的 VNode 更新时调用，但是可能发生在其子 VNode 更新之前。
+- componentUpdated: 指令所在组件的 VNode 及其子 VNode 全部更新后调用。
+- unbind: 只调用一次，指令与元素解绑时调用。
+
+> 每个钩子函数都接受以下参数：
+
+- el: 指令所绑定的元素，可以用来直接操作 DOM。
+- binding: 一个对象，包含以下属性：
+  - name: 指令名，不包括 v- 前缀。
+  - value: 指令的绑定值，例如：v-my-directive="1 + 1" 中，绑定值为 2。
+  - oldValue: 指令绑定的前一个值，仅在 update 和 componentUpdated 钩子中可用。
+  - expression: 字符串形式的指令表达式。
+  - arg: 传给指令的参数，例如 v-my-directive:foo 中，参数为 "foo"。
+  - modifiers: 一个包含修饰符的对象。
+- vnode: Vue 编译生成的虚拟节点。
+- oldVnode: 上一个虚拟节点，仅在 update 和 componentUpdated 钩子中可用。
+### 实际应用示例
+```js
+// 假设我们想要创建一个自定义指令 v-focus，使得元素在页面加载时自动获得焦点：
+// 全局注册 v-focus 指令
+Vue.directive('focus', {
+  // 当绑定元素插入到 DOM 中时……
+  inserted: function (el) {
+    // 聚焦元素
+    el.focus();
+  }
+});
+
+```
+
+```js
+// 在组件模板中使用：
+
+<input v-focus>
+```
+这样，当页面加载并且该 <input> 元素被插入到 DOM 中时，它会自动获得焦点。
+
+自定义指令是 Vue 中一个强大的功能，允许开发者以声明式的方式处理底层 DOM 操作，使得代码更加简洁和可维护。

@@ -88,6 +88,24 @@ export const sidebar: DefaultTheme.Sidebar = {
           ]
         },
         {
+          text: '前端工程化',
+          items: [
+            {
+              text: 'Webpack',
+              items: [
+                {
+                  text: 'Loader',
+                  link: '/views/front-end/modules/webpack/loader'
+                },
+                {
+                  text: 'Plugins',
+                  link: '/views/front-end/modules/webpack/plugins'
+                },
+              ]
+            }
+          ]
+        },
+        {
           text: '性能优化',
           items: [
             {
