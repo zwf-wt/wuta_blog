@@ -115,6 +115,20 @@ export const sidebar: DefaultTheme.Sidebar = {
           ]
         },
         {
+          text: 'node',
+          items: [
+            {
+              text: '基础',
+              link: '/views/front-end/node/basic'
+            },
+            {
+              text: 'node详解',
+              link: '/views/front-end/node/node-detail'
+            }
+          ]
+        },
+        
+        {
           text: 'threeJS',
           items: [
             {
@@ -364,7 +378,11 @@ export const sidebar: DefaultTheme.Sidebar = {
         {
           text: '算法题',
           link: '/views/interview-questions/dataStructure-algorithm/alg'
-        }
+        },
+        {
+          text: '其它',
+          link: '/views/interview-questions/dataStructure-algorithm/other'
+        },
       ]
     }
   ]
