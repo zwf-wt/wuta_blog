@@ -63,7 +63,11 @@ export const nav: DefaultTheme.NavItem[] = [
       {
         text: '图解HTTP',
         link: '/views/books/img-http/index'
-      }
+      },
+      {
+        text: '人月神话',
+        link: '/views/books/人月神话/焦油坑'
+      },
     ]
   }
 ];

@@ -291,6 +291,40 @@ export const sidebar: DefaultTheme.Sidebar = {
       link: '/views/books/img-http/第一章：了解Web及网络基础'
     }
   ],
+  '/views/books/人月神话': [
+    {
+      text: '焦油坑',
+      link: '/views/books/人月神话/焦油坑'
+    },
+    {
+      text: '人月神话',
+      link: '/views/books/人月神话/人月神话'
+    },
+    {
+      text: '外科手术队伍',
+      link: '/views/books/人月神话/外科手术队伍'
+    },
+    {
+      text: '画蛇添足',
+      link: '/views/books/人月神话/画蛇添足'
+    },
+    {
+      text: '贯彻执行',
+      link: '/views/books/人月神话/贯彻执行'
+    },
+    {
+      text: '为什么巴比伦塔会失败？',
+      link: '/views/books/人月神话/为什么巴比伦塔会失败'
+    },
+    {
+      text: '胸有成竹',
+      link: '/views/books/人月神话/胸有成竹'
+    },
+    {
+      text: '削足适履',
+      link: '/views/books/人月神话/削足适履'
+    },
+  ],
   '/views/interview-questions': [
     {
       text: '前端面试',
