@@ -124,3 +124,5 @@ TypeScript（简称TS）和JavaScript（简称JS）是两种不同的编程语�
 4. 构建环境：需要配置额外的构建工具（如Webpack、Rollup等）来将 TypeScript 编译成可在浏览器中运行的 JavaScript 代码，这可能对一些开发者来说是一个负担。
 
 5. 迁移成本：对于已有的大型 JavaScript 项目来说，要将现有的代码迁移到 TypeScript 可能需要一定的成本和时间，特别是在处理类型兼容性和重构代码的过程中。
+
+> 使用 TS 一定要有 OOP 的思想，不然 TS 就是个摆设。只能提高代码质量，不能提高开发效率。

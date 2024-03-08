@@ -124,6 +124,10 @@ export const sidebar: DefaultTheme.Sidebar = {
             {
               text: 'node详解',
               link: '/views/front-end/node/node-detail'
+            },
+            {
+              text: 'node框架详解',
+              link: '/views/front-end/node/node框架详解'
             }
           ]
         },
