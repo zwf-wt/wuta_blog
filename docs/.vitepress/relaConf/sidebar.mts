@@ -247,7 +247,21 @@ export const sidebar: DefaultTheme.Sidebar = {
           link: '/views/after-end/python/PandasCodeSnippet'
         }
       ]
-    }
+    },
+    {
+      text: 'Java',
+      items: [
+        {
+          text: 'Java基础',
+          items: [
+            {
+              text: '继承',
+              link: '/views/after-end/java/basic/extend'
+            }
+          ]
+        },
+      ]
+    },
   ],
   // 设计模式相关
   '/views/design-pattern': [

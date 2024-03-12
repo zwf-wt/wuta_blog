@@ -42,6 +42,11 @@ export const nav: DefaultTheme.NavItem[] = [
         text: 'Pandas代码片段',
         link: '/views/after-end/python/PandasCodeSnippet'
       },
+      {
+        text: 'Java基础',
+        link: '/views/after-end/java/basic/extend'
+      },
+
     ]
   },
   {

@@ -85,3 +85,57 @@ console.log(person instanceof Person); // 输出：true
 
 ```
 总之，new 关键字的实现原理比较简单，主要是通过创建一个空对象并将其原型指向构造函数的 prototype 属性，然后在执行构造函数时将空对象作为 this 上下文，最后根据构造函数的返回值返回相应的对象
+
+## 6. 实现一个简单的Promise
+
+### 6.1 Class Promise 版
+#### 基本结构
+```js
+// 静态常量的声明
+const PENDING = 'pending';
+const FULFILLED = 'fulfilled';
+const REJECTED = 'rejected';
+
+class MyPromise {
+  
+  constructor(executer) {
+    // 1. 默认状态 - PENDING
+    this.status = PENDING;
+
+    // 2. 维护内部成功失败的值
+    this.value = undefined;
+    this.reason = undefined;
+
+    // 成功回调
+    let resolve = value => {
+      // 单向流转
+      if (this.status === PENDING) {
+        this.status = FULFILLED;
+        this.value = value;
+    }
+
+    // 失败回调
+    let reject = reason => {
+      if (this.status === PENDING) {
+        this.status = REJECTED;
+        this.reason = reason;
+      }
+    }
+
+    // 立即执行executer
+    executer(resolve, reject);
+  }
+
+  then(onFulfilled, onRejected) {
+    if (this.status === FULFILLED) {
+      onFulfilled(this.value);
+    }
+
+    if (this.status === REJECTED) {
+      onRejected(this.reason);
+    }
+  }
+}
+```
+
+#### 构造函数
