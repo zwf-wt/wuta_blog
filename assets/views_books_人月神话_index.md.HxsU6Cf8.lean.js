@@ -1,0 +1,1 @@
+import{_ as e,o as t,c as o}from"./chunks/framework.MMMQMGZx.js";const m=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"views/books/人月神话/index.md","filePath":"views/books/人月神话/index.md"}'),s={name:"views/books/人月神话/index.md"};function a(n,r,i,c,d,p){return t(),o("div")}const f=e(s,[["render",a]]);export{m as __pageData,f as default};
