@@ -57,3 +57,9 @@ npm i -g depcheck
 
 depcheck
 ```
+### 2. 解决 npm或pnpm : 无法加载文件 `C:\Users\hp\AppData\Roaming\npm\cnpm.ps1`
+因为在此系统上禁止运行脚本
+
+1. 以管理员身份打开 powershell 
+2. 运行 `set-ExecutionPolicy RemoteSigned` 
+3. 选择 `Y` 或者 `A`
