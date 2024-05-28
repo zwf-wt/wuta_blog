@@ -245,6 +245,23 @@ export const sidebar: DefaultTheme.Sidebar = {
         {
           text: 'Pandas代码片段',
           link: '/views/after-end/python/PandasCodeSnippet'
+        },
+        {
+          text: '机器学习',
+          items: [
+            {
+              text: '概述',
+              link: '/views/after-end/python/MachineLearning/index.md'
+            },
+            {
+              text: '特征工程',
+              link: '/views/after-end/python/MachineLearning/2. 特征工程.md'
+            },
+            {
+              text: '分类算法',
+              link: '/views/after-end/python/MachineLearning/3. 分类算法.md'
+            }
+          ]
         }
       ]
     },
@@ -257,7 +274,15 @@ export const sidebar: DefaultTheme.Sidebar = {
             {
               text: '继承',
               link: '/views/after-end/java/basic/extend'
-            }
+            },
+            {
+              text: '多态',
+              link: '/views/after-end/java/basic/polymorphic'
+            },
+            {
+              text: '枚举',
+              link: '/views/after-end/java/basic/enumerate'
+            },
           ]
         },
       ]
