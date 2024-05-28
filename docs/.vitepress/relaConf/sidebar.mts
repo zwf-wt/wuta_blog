@@ -81,10 +81,10 @@ export const sidebar: DefaultTheme.Sidebar = {
               text: 'vuex',
               link: '/views/front-end/vue-series/vuex'
             },
-            // {
-            //   text: 'vuex',
-            //   link: '/views/front-end/vue-series/vuex'
-            // }
+            {
+              text: '开发一个vite包并发布到npm',
+              link: '/views/front-end/vue-series/custom-vite-package'
+            }
           ]
         },
         {
