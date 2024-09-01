@@ -304,8 +304,16 @@ export const sidebar: DefaultTheme.Sidebar = {
       text: '创建型模式',
       items: [
         {
+          text: '工厂模式',
+          link: '/views/design-pattern/creational/factory'
+        },
+        {
           text: '建造者模式',
           link: '/views/design-pattern/creational/builder'
+        },
+        {
+          text: '原型模式',
+          link: '/views/design-pattern/creational/prototype'
         }
       ]
     },
