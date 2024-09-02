@@ -304,6 +304,10 @@ export const sidebar: DefaultTheme.Sidebar = {
       text: '创建型模式',
       items: [
         {
+          text: '单例模式',
+          link: '/views/design-pattern/creational/singleton'
+        },
+        {
           text: '工厂模式',
           link: '/views/design-pattern/creational/factory'
         },
@@ -320,6 +324,10 @@ export const sidebar: DefaultTheme.Sidebar = {
     {
       text: '结构型模式',
       items: [
+        {
+          text: '桥接器模式',
+          link: '/views/design-pattern/structural/bridge'
+        },
         {
           text: '适配器模式',
           link: '/views/design-pattern/structural/adapter'
