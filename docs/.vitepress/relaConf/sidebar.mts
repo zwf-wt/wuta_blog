@@ -331,7 +331,11 @@ export const sidebar: DefaultTheme.Sidebar = {
         {
           text: '适配器模式',
           link: '/views/design-pattern/structural/adapter'
-        }
+        },
+        {
+          text: '组合模式',
+          link: '/views/design-pattern/structural/composite'
+        },
       ]
     },
     {
