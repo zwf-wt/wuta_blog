@@ -336,6 +336,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: '组合模式',
           link: '/views/design-pattern/structural/composite'
         },
+        {
+          text: '装饰器模式',
+          link: '/views/design-pattern/structural/decorator'
+        },
       ]
     },
     {
