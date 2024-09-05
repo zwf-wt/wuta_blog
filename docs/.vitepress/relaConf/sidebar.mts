@@ -344,6 +344,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: '外观模式',
           link: '/views/design-pattern/structural/facade'
         },
+        {
+          text: '享元模式',
+          link: '/views/design-pattern/structural/flyweight'
+        },
       ]
     },
     {
