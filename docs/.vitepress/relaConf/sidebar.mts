@@ -348,6 +348,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: '享元模式',
           link: '/views/design-pattern/structural/flyweight'
         },
+        {
+          text: '代理模式',
+          link: '/views/design-pattern/structural/proxy'
+        },
       ]
     },
     {
