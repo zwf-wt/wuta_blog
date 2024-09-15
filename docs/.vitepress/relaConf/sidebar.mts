@@ -358,6 +358,10 @@ export const sidebar: DefaultTheme.Sidebar = {
       text: '行为型模式',
       items: [
         {
+          text: '责任链模式',
+          link: '/views/design-pattern/behavior/chain_responsibility'
+        },
+        {
           text: '模板方法模式',
           link: '/views/design-pattern/behavior/template_function'
         }
