@@ -370,6 +370,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           link: '/views/design-pattern/behavior/interpreter'
         },
         {
+          text: '迭代器模式',
+          link: '/views/design-pattern/behavior/iterator'
+        },
+        {
           text: '模板方法模式',
           link: '/views/design-pattern/behavior/template_function'
         }
