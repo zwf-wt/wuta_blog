@@ -362,6 +362,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           link: '/views/design-pattern/behavior/chain_responsibility'
         },
         {
+          text: '命令模式',
+          link: '/views/design-pattern/behavior/command'
+        },
+        {
           text: '模板方法模式',
           link: '/views/design-pattern/behavior/template_function'
         }
