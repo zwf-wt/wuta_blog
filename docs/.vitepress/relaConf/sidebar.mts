@@ -386,6 +386,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           link: '/views/design-pattern/behavior/observer'
         },
         {
+          text: '状态模式',
+          link: '/views/design-pattern/behavior/state'
+        },
+        {
           text: '模板方法模式',
           link: '/views/design-pattern/behavior/template_function'
         }
