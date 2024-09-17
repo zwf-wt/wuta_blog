@@ -390,6 +390,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           link: '/views/design-pattern/behavior/state'
         },
         {
+          text: '策略模式',
+          link: '/views/design-pattern/behavior/strategy'
+        },
+        {
           text: '模板方法模式',
           link: '/views/design-pattern/behavior/template_function'
         }
