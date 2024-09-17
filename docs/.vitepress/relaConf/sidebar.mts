@@ -396,7 +396,11 @@ export const sidebar: DefaultTheme.Sidebar = {
         {
           text: '模板方法模式',
           link: '/views/design-pattern/behavior/template_function'
-        }
+        },
+        {
+          text: '访问者模式',
+          link: '/views/design-pattern/behavior/visitor'
+        },
       ]
     }
   ],
