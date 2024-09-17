@@ -374,6 +374,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           link: '/views/design-pattern/behavior/iterator'
         },
         {
+          text: '中介者模式',
+          link: '/views/design-pattern/behavior/mediator'
+        },
+        {
           text: '模板方法模式',
           link: '/views/design-pattern/behavior/template_function'
         }
