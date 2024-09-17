@@ -378,6 +378,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           link: '/views/design-pattern/behavior/mediator'
         },
         {
+          text: '备忘录模式',
+          link: '/views/design-pattern/behavior/memento'
+        },
+        {
           text: '模板方法模式',
           link: '/views/design-pattern/behavior/template_function'
         }
