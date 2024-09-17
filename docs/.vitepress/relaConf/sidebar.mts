@@ -382,6 +382,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           link: '/views/design-pattern/behavior/memento'
         },
         {
+          text: '观察者模式',
+          link: '/views/design-pattern/behavior/observer'
+        },
+        {
           text: '模板方法模式',
           link: '/views/design-pattern/behavior/template_function'
         }
