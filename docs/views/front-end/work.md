@@ -49,6 +49,37 @@ console.log((xxx & READ) === 0)
 ```
 
 ### 4. 怎么实现常见登录业务的
+
+### 5. 函数柯里化
+```js
+// add(1)(2)(3)(4)
+const add = function() {
+    // 2. 输入 处理外层arguments => 类数组处理
+    let args = Array.prototype.slice.call(arguments);
+
+    // 1. 构造科里化结构
+    let inner = function() {
+        // 主功能
+        args.push(...arguments);
+        return inner;
+    }
+
+    // 3. 最终返回值的输出
+    inner.toString = function() {
+        return args.reduce((prev, cur) => {
+            return prev + cur;
+        })
+    }
+
+    return inner;
+}
+// 面试：
+// toString - 本地方法的调整用于多类型返回的处理
+// 追问：
+// 如果要用到真正的toString? - 利用call直接运行String
+// 追问：
+// 函数类型？ - 类型统一 => 不纯
+```
 ## 模块
 ### 1. depcheck
 > 超级好用的依赖检查工具`depcheck`

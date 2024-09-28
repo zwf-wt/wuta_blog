@@ -38,5 +38,9 @@ features:
     title: 搭建博客
     details: 让每个前后端小伙伴都拥有一个属于自己的博客
     link: https://mp.weixin.qq.com/s/KY0GAEYC6V4Xj1oGVtPgDg
+  - icon: 📖
+    title: 收集到的文章
+    details: 个人收集到文章、笔记、总结、博客
+    link: /views/other/collect_article
 ---
 

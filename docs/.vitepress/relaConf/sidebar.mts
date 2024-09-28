@@ -16,7 +16,11 @@ export const sidebar: DefaultTheme.Sidebar = {
         {
           text: '实际遇到的问题',
           link: '/views/sql/work'
-        }
+        },
+        {
+          text: 'sql优化',
+          link: '/views/sql/sql-optimize'
+        },
       ]
     },
   ],
@@ -49,6 +53,10 @@ export const sidebar: DefaultTheme.Sidebar = {
         {
           text: '介绍',
           link: '/views/front-end/index'
+        },
+        {
+          text: 'ts',
+          link: '/views/front-end/ts'
         },
         {
           text: '前端API',
