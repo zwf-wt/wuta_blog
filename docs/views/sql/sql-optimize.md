@@ -245,3 +245,186 @@ select * from teacher where name = 123 -- 程序底层将 123 转换为 '123'，
 ```sql
 select * from teacher where name = '' or tcid > 1; -- 将 or 左侧的 name 索引失效
 ```
+##### 8. 一些其它的优化方法
+###### 1. exist和in
+>  如果主查询的数据集大，则使用in;如果子查询的数据集大，则使用exist
+```sql
+-- exist：将主查询的结果，放到子查询结果中进行条件校验，条件成立则保留，条件不成立则丢弃
+-- select ... from table where exist (子查询)
+
+-- in:
+-- select ... from table where tid in (1, 3, 5);
+```
+###### 2. order by 优化
+using filesort 有两种算法:双路排序、单路排序(根据I0的次数)
+MySQL4.1之前 默认使用 双路排序;
+MySQL4.1之后默认使用 单路排序 ;
+注意:单路排序比双路排序会占用更多的buffer。
+单路排序在使用时，如果数据大，可以考虑调大buffer的容量大小: `set max_length_for_sort_data = 2048;`
+如果max length for_sort data值太低，则mysq1会自动从 单路->双路(太低:需要排序的列的总长度大于max_length_for_sort_data )
+
+提高`orderby`查询的策略:
+a. 选择使用单路、双路，调整buffer的容量大小
+b. 避免select *
+c. 复合索引不要跨列使用, 避免usingc filesort
+d. 保证全部的排序字段 排序的一致性(都是升序或降序)
+
+##### 9. 慢查询日志
+> MySql 提供的一种日志记录，用于记录MySql中响应时间超过阈值的sql语句，怛查询日志默认是关闭的。
+
+> 检查是否开启了慢查询日志：`show variables like '%slow_query_log%';`
+
+> 临时开启：
+```sql
+  set global slow_query_log = 1; -- 开启慢查询日志
+  exit
+  service mysql restart
+```
+
+> 永久开启：
+```sql
+-- /etc/my.cnf 中追加配置：
+-- vi /etc/my.cnf
+[mysqld]
+slow_query_log = 1
+slow_query_log_file = /var/lib/mysql/mysql-slow.log
+```
+
+> 慢查询日志的阈值：`show variables like '%long_query_time%';`
+
+> 临时设置阈值：`set global long_query_time = 5;`, 单位是秒，设置完毕后，重新登陆后起效(不需要重启服务)
+
+> 永久设置阈值：
+```sql
+-- /etc/my.cnf 中追加配置：
+-- vi /etc/my.cnf
+[mysqld]
+long_query_time = 5
+```
+
+> 查看慢sql
+1. 慢查询的sql被记录在了日志中，因此可以通过日志查看具体的慢sql
+```sql
+-- cat /var/lib/mysql/mysql-slow.log
+```
+2. 通过mysqldumpslow工具查看慢sql, 可能通过一些过滤条件，快速查找出需要定位的慢sql
+```sql
+-- mysqldumpslow --help
+-- s：排序方式
+-- r：逆序
+-- l：锁定时间
+-- g：正则匹配模式
+
+-- 获取返回记录最多的3个SQL
+  mysqldumpslow -s -r -t 3 /var/lib/mysql/mysql-slow.log
+-- 获取访问次数最多的3个SQL
+  mysqldumpslow -s c -t 3 /var/lib/mysql/mysql-slow.log
+-- 按照时间排序，前10条包含left ioin查询语句的SQL
+  mysqldumpslow -s t -t 10 -g "left join" /var/lib/mysql/mysql-slow.log
+
+-- 语法：mysqldumpslow [options...] [log_file ...]
+-- 语法：mysqldumpslow [各种参数] [慢查询日志的文件]
+
+-- 如果报错：You have an error in your sql syntax, 说明sql 语句语法有错，需要修改sql语句
+
+-- 如果报错：This function has none of DETERMINISTIC, NO SQL, or READS SQL DATA in its declaration and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable), 则需要修改配置文件：是因为存储过程/存储函数在创建时与之前的开启慢查询日志冲突了
+-- 解决冲突
+--     临时解决(开启 log_bin_trust_function_creators)
+show variables like '%log_bin_trust_function_creators%';
+set global log_bin_trust_function_creators = 1;
+-- 永久解决
+-- /etc/my.cnf
+-- log_bin_trust_function_creators = 1
+```
+#### 分析海量数据
+##### profiles
+```sql
+show profiles; -- 默认关闭
+show variables like '%profiling%'; -- 查看是否开启
+
+set profiling = on; -- 开启
+-- show profiles: 会记录所有profiling打开之后的全部sql查询语句所花费的时间。缺点：不够精确,只能看到 总共消费的时间，不能看到各个硬件消费的时间I
+```
+##### 精确分析：sql 诊断
+```sql
+-- show profile all for query 上一个查询的query id
+-- show profile cpu,block io for query 上一个查询的query id
+```
+##### 全局查询日志
+> 记录开启之后的全部sql语句(这次全局的记录操作仅仅在调优、开发过程中打开)
+```sql
+show variables like '%general_log%'; -- 查看是否开启
+
+-- 执行的所有sql 记录在表中
+set global general_log = 1; -- 开启全局日志
+set global log_output='table'; -- 设置输出方式为表 将全部的sql记录在表中
+-- 开启后，会记录所有sql, 会被记录在 mysql.general_log表中，
+-- select * from mysql.general_log;
+
+-- 执行的所有sql 记录在文件中
+set global log_output='file'; -- 设置输出方式为文件
+set global general_log = on; -- 开启全局日志
+set global general_log_file='/tmp/mysql.log'; -- 设置日志文件路径
+```
+
+## 锁机制
+> 解决因资源共享而造成的并发问题
+> 操作类型分类：
+1. 读锁(共享锁): 对同一个数据(衣服)，多个读操作可以同时进行，互不干扰
+2. 写锁(互斥锁、排它锁): 如果当前写操作没有完成，则无法进行其他的读操作和写操作(读锁、写锁)
+
+> 操作范围分类：
+1. 表锁: 一次性对一张表整体加锁。如MyISAM存储引擎使用表锁，开销小、加锁快、无死锁；但锁的范围大，容易发生锁冲突、并发度低
+2. 行锁：一次性对一条数据加锁。如InnoDB存储引擎使用行锁，开销大、加锁慢、容易出现死锁，不易发生锁冲突，并发度高
+3. 页锁
+```sql
+-- 增加锁
+-- locak table 表名1 read/write, 表名2 read/write ...;
+
+-- 查看加锁的表：
+-- show open tables;
+
+-- 释放锁
+unlock tables;
+
+
+-- 加读锁
+lock table tablelock read;
+
+
+-- 会话：session, 每一个访问数据的dos命令行、数据库客户端工具都是一个会话
+
+-- 会话0：
+lock table tablelock read;
+select * from tablelock; -- 可以查询 读(查)
+delete from tablelock where id = 1; -- 写(增删改) 会等待， 不可以，报错
+
+select * from emp; -- 读，不可以
+delete from tablelock where eno = 1; -- 写，不可以
+-- 如果某一个会话，对A表加了read锁，则该会话可以对A表进行读操作、不能进行写操作
+-- 且该会话不能对其他表进行读、写操作
+-- 即如果给A表加了read锁，则当前会话只能对A表进行读操作
+
+-- 会话1：
+select * from tablelock; -- 可以查询 读(查)
+delete from tablelock where id = 1; -- 写(增删改) 会等待会话0将锁释放， 不可以，报错
+
+select * from emp; -- 读，可以
+delete from emp where eno = 1; -- 写，可以
+-- 会话0给A表加了锁，其他会话的操作
+-- 1. 可以对其他表(A表以外的表)进行读、写操作
+-- 2. 对A表：读-可以，写-等待会话0释放锁，不可以
+
+
+
+-- 加写锁
+-- 会话0：
+lock table tablelock write;
+-- 当前会话(会话0)可以对加了写锁的表进行任何操作(增删改查)；但是不能操作(增删改查)其他表
+-- 其他会话：对会话0加写锁的表，可以进行增删改查操作的前提是：等待会话0释放锁
+```
+
+### MySql表级锁的锁模式
+MyISAM在执行查询语句(select)前，会自动会涉及的所有表加读锁，在执行更新操作(DML)前，会自动给涉及的表加写锁。所以对MyISAM表的读操作，不会阻塞其他会话对同一表的读操作，但会阻塞对同一表的写操作。对MyISAM表进行操作，会有以下情况：
+1. 对MyISAM表进行读操作(加读锁)，不会阻塞其他进程(会话)对同一表的读操作，但会阻塞对同一表的写操作。只有当读锁释放后，才会执行其它进程的写操作。
+2. 对MyISAM表进行写操作(加写锁)，会阻塞其他进程(会话)对同一表的读操作和写操作。只有当写锁释放后，才会执行其它进程的读写操作。
