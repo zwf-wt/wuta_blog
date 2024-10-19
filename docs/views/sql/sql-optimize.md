@@ -428,3 +428,103 @@ lock table tablelock write;
 MyISAM在执行查询语句(select)前，会自动会涉及的所有表加读锁，在执行更新操作(DML)前，会自动给涉及的表加写锁。所以对MyISAM表的读操作，不会阻塞其他会话对同一表的读操作，但会阻塞对同一表的写操作。对MyISAM表进行操作，会有以下情况：
 1. 对MyISAM表进行读操作(加读锁)，不会阻塞其他进程(会话)对同一表的读操作，但会阻塞对同一表的写操作。只有当读锁释放后，才会执行其它进程的写操作。
 2. 对MyISAM表进行写操作(加写锁)，会阻塞其他进程(会话)对同一表的读操作和写操作。只有当写锁释放后，才会执行其它进程的读写操作。
+
+## 分析表锁定
+### 查看哪些表加了锁：
+```sql
+show open tables; -- 1: 代表被加了锁
+```
+### 分析表锁定的严重程度：
+```sql
+show status like 'table%';
+-- Table_locks_immediate: 即可能获取到的锁数
+-- Table_locks_waited: 需要等待的表锁数(如果该值越大，说明表锁越严重)
+
+-- 一般建议： Table_locks_immediate / Table_locks_waited  > 5000, 建议采用InnoDB存储引擎, 否则采用MyISAM存储引擎
+```
+## 行锁
+```sql
+-- mysql 默认自动commit; oracle 默认手动commit;
+
+set autocommit = 0; -- 关闭自动提交 (默认开启), 关闭后就相当于加了行锁
+
+-- 会话0: 写操作 
+insert into linelock values('a6')
+
+-- 会话1: 写操作 同样的数据
+update linelock set name = 'ax' where name = 'a6' 
+-- 更新时发现此数据被加锁了，会等待其它会话释放锁，然后更新
+
+-- 对行锁情况：
+-- 1. 如果会话x对某条数据a进行DML操作(研究时：关闭了自动commit的情况下)，则其它会话必须等待会话x结束事务(commit/rollback)后，才能对数据a进行操作。
+-- 2. 表锁是通过unlock tables: 释放锁，行锁是通过事务(commit/rollback)释放锁
+
+
+
+-- 会话0：写操作
+insert into linelock values(8, 'a8')
+-- 会话1： 写操作， 不同的数据
+update linelock set name = 'ax' where id = 5;
+-- 行锁：一次锁一行数据，因此如果操作的是不同数据，则不干扰
+
+
+```
+### 行锁的注意事项
+#### 如果没有索引，则行锁会转为表锁
+```sql
+show index from linelock;
+alter table linelock add index idx_linelock_name(name);
+
+-- 会话0：写操作
+update linelock set name = 'ai' where name = '3'
+commit;
+-- 会话1：写操作
+update linelock set name = 'aiX' where name = '4'
+commit
+
+
+
+-- 会话0：写操作
+update linelock set name = 'ai' where name = 3
+-- commit;
+-- 会话1：写操作
+update linelock set name = 'aiX' where name = 4
+-- commit
+-- 可以发现，数据被阻塞了(加锁)
+-- 原因：如果索引类发生了类型转换，则索引失效。因此此次操作，会从行锁转为表锁
+```
+#### 行锁的一种特殊情况：间隙锁：值在范围内，但并不存在
+```sql
+-- 此时linelock表中 id为7的数据不存在
+update linelock set name = 'x' where id < 1 and id < 9;
+-- 即在id为1和9之间加锁，但并不存在id为7的数据, 则id为7的数据为间隙锁
+-- 间隙锁：Mysql会自动给间隙加锁，防止其它会话插入数据，导致数据不一致
+-- 所以，id为7的数据，被锁住了，其它会话无法插入id为7的数据
+
+-- 行锁：如果有where，则实际加过的范围就是where后面的范围(不是实际的值)
+```
+
+### 行锁分析
+```sql
+show status like '%innodb_row_lock%'
+-- Innodb_row_lock_current_waits: 当前等待锁的个数
+-- Innodb_row_lock_time: 等待总时长, 从系统启动到现在一共等待的时间
+-- Innodb_row_lock_time_avg: 平均等待时长。从系统启动到现在，平均等待的时间
+-- Innodb_row_lock_time_max: 最大等待时长。从系统启动到现在，最长一次等待时间
+-- Innodb_row_lock_waits: 等待次数。从系统启动到现在，一共等待的次数
+```
+### 查询行锁
+> 如果仅仅是查询数据，会不会加锁呢？
+```sql
+-- set autocommit = 0;
+-- start transaction;
+-- begin;
+select * from linelock where id = 2 for update;
+-- 通过 for update 对query语句进行加锁。
+```
+
+### 行锁结论
+InnoDB默认采用行锁
+缺点：比表锁性能损耗大。
+优点：并发能力强帖，效率高。
+因此建议，高并发用InnoDB，低并发用MyISAM
