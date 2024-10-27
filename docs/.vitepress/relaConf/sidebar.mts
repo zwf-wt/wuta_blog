@@ -139,6 +139,10 @@ export const sidebar: DefaultTheme.Sidebar = {
             }
           ]
         },
+        {
+          text: 'uniapp',
+          link: '/views/front-end/uniapp'
+        },
         
         {
           text: 'threeJS',
