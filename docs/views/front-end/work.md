@@ -80,6 +80,87 @@ const add = function() {
 // 追问：
 // 函数类型？ - 类型统一 => 不纯
 ```
+### 6. 判断数据类型
+```js
+var _toString = Object.prototype.toString;
+/**
+ * 获取数据类型
+ * @param {*} value 要判断类型的值
+ */
+function toRawType (value) {
+  return _toString.call(value).slice(8, -1)
+}
+
+toRawType(1) // => Number
+toRawType('1') // => String
+/**
+ * Object.prototype.toString.call(value) => [object Type]
+ * [object String]
+ * 因此，通过slice(8, -1)可以获取到Type
+ * 可能会返回的类型有：
+ * String, Number, Boolean,
+ * Undefined, Null,
+ * Object, Array, Function,
+ * Date, RegExp, Error, Symbol, BigInt
+ */
+
+/**
+ * 判断数据是否是对象
+ * @param {*} val 要判断的数据
+ * @returns {boolean}
+ */
+function isPlainObject (obj) {
+  return _toString.call(obj) === '[object Object]'
+}
+
+/**
+ * 判断数据是否是对象,
+ * 仅仅只取分出简单数据或者复杂数据类型的话，
+ * 可以用这个方法
+ */
+function isObject (obj) {
+  return obj !== null && typeof obj === 'object'
+}
+
+/**
+ * 判断数据是否是正则
+ * @param {*} val 要判断的数据
+ * @returns {boolean}
+ */
+function isRegExp (v) {
+  return _toString.call(v) === '[object RegExp]'
+}
+```
+### 7. 将数据转换成数值
+```js
+/**
+ * 将数据转换成数值, 如果转换失败则返回原数据
+ * @param {*} val 要转换的数据
+ * @returns {number | *}
+ */
+function toNumber (val) {
+  var n = parseFloat(val);
+  return isNaN(n) ? val : n
+}
+```
+
+### 8. 判断是否是Promise
+```js
+function isPromise (val) {
+  return (
+    val &&
+    typeof val.then === 'function' &&
+    typeof val.catch === 'function'
+  )
+}
+```
+### 9. 判断某个对象中是否含有某个属性
+```js
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+function hasOwn (obj, key) {
+  return hasOwnProperty.call(obj, key)
+}
+```
 ## 模块
 ### 1. depcheck
 > 超级好用的依赖检查工具`depcheck`

@@ -841,3 +841,64 @@ Vue.directive('focus', {
 这样，当页面加载并且该 <input> 元素被插入到 DOM 中时，它会自动获得焦点。
 
 自定义指令是 Vue 中一个强大的功能，允许开发者以声明式的方式处理底层 DOM 操作，使得代码更加简洁和可维护。
+## vue3 语法
+### watch、watchEffect
+- 监听属性允许我们在数据变化时执行异步操作或复杂的逻辑。
+- 监听属性适用于对数据变化做出响应，比如在数据变化时发送请求、处理副作用等，
+- 监听属性可以监听一个或多个数据的变化，并在数据变化时执行相应的操作。
+- 监听属性中的函数不是必须要用return返回值。
+```vue
+<template>
+  <view class="">
+    <input type="text"v-model="person.name"/>
+  </view>
+  {{person}}
+</template>
+
+<script setup>
+import {ref, watch} from "vue"
+
+const person = ref({
+  name:"张三”，
+  age:23
+});
+const firstName = ref("张");
+const lastName = ref("三");
+
+// 监听单个数据
+watch(firstName, (newValue, oldValue) => {
+	console.log('firstName 变化了', newValue, oldValue)
+})
+
+// 这样监听不到复杂类型数据
+watch(person, (newValue, oldValue) => {
+  console.log(newValue):
+})
+
+// 监听复杂类型数据：需要添加deep属性
+watch(person, (newValue) => {
+  console.log(newValue)
+}, {deep: true})
+
+// 监听多个数据: immediate: true 表示立即执行
+watch(person, (newValue) => {
+  console.log(newValue)
+}, {deep: true, immediate: true})
+
+// 监听对象的某个属性
+watch(() => person.value.name, (newValue, oldValue) => {
+	console.log('person的name发生了变化', newValue, oldValue)
+})
+
+// 监听多个数据
+watch(
+  [firstName, lastName], // 要监听的属性
+  ([NfirstName, NlastName], [OfirstName, OlastName]) => {
+    // 回调函数
+  })
+
+// 使用 watchEffect 监听数据变化, 不需要手动指定要监听的属性，它会自动收集依赖, 而且也是立即执行的
+watchEffect(()=>{
+  console.log(firstName.value,lastName.value)
+})
+```
