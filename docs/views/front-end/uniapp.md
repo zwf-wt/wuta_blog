@@ -260,7 +260,50 @@
 }
 </style>
 ```
+## 生命周期
+```vue
+<script setup>
+import {
+	onLoad, onReady, onShow, onHide, onUnload,
+	onPageScroll
+} from '@dcloudio/uni-app'
 
+onLoad((e)=>{
+	console.log('onLoad, 接收路由参数', e)
+})
+
+onReady(() => {
+	console.log('onReady 类似于 onMounted')
+})
+
+onShow(() => {
+	console.log('onShow')
+})
+
+onHide(() => {
+	console.log('onHide')
+})
+
+onUnload(() => {
+	console.log('onUnload 卸载页面')
+})
+
+onPageScroll(() => {
+	console.log('onPageScroll 页面滚动')
+})
+
+// -- onLoad -> onShow -> onReady
+</script>
+```
+## 响应式单位rpx
+以750px进行换算的
+
+## 导入样式文件
+```vue
+<style>
+@import '@/xxx.css'
+</style>
+```
 ## 文件
 
 ### pages.json
@@ -271,23 +314,74 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "uni-app"
+        "navigationBarTitleText": "uni-app",
       }
     },
     {
       "path": "pages/demo1/demo1",
       "style": {
         "navigationBarTitleText": "demo页面",
-        "enablePullDownRefresh": false
+        "enablePullDownRefresh": false, // 禁止下拉刷新
+				"navigationBarBackgroundColor": "#000000", // 页面导航栏背景颜色
+				"navigationBarTextStyle": "white", // 页面导航栏标题颜色
       }
     }
   ],
-  "globalStyle": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
+  "globalStyle": { // 全局样式
+    "navigationBarTextStyle": "black", // 导航栏标题颜色 black/white
+    "navigationBarTitleText": "uni-app", // 导航栏标题文字内容
+    "navigationBarBackgroundColor": "#F8F8F8", // 导航栏背景颜色
+    "backgroundColor": "#F8F8F8",
+		"navigationStyle": "custom", // 导航栏样式 default/custom
+		"enablePullDownRefresh": true, // 是否开启下拉刷新
+		"backgroundTextStyle": 'light', // 下拉 loading 样式 dark/light
+		"onReachBottomDistance": 50 // 页面上拉触底事件触发时距页面底部距离
   },
-  "uniIdRouter": {}
+  "uniIdRouter": {},
+	"tabBar": {
+		"color": '#999', // 未选中颜色
+		"selectedColor": '#333', // 选中颜色
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "static/tabbar/home.png", // 未选中图标 81 * 81
+				"selectedIconPath": "static/tabbar/home-active.png" // 选中图标 81 * 81
+			}
+			{
+				"pagePath": "pages/index/index2",
+				"text": "分类",
+
+			}
+		]
+	}
 }
+```
+## manifest.json
+```json
+// 上传代码时自动压缩
+// 设置appid
+```
+## vite.config.js
+```
+npm i uniplugin-auto-import
+```
+
+创建一个 vite.config.js 文件
+```js
+import { defineConfig } from 'vite'
+import uni from '@dcloudio/vite-plugin-uni'
+import AutoImport from 'uniplugin-auto-import/vite'
+
+export default defineConfig({
+  plugins: [
+    uni(),
+    AutoImport({
+      imports: [
+				'vue',
+				'uni-app'
+			]
+    })
+  ]
+})
 ```
