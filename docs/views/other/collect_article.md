@@ -6,6 +6,7 @@
 ## 前端
 
 1. [React技术揭秘](https://react.iamkasong.com)
+2. [若川的博客](https://ruochuan12.github.io/index)
 
 ## 后端
 
