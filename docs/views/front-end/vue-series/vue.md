@@ -902,3 +902,30 @@ watchEffect(()=>{
   console.log(firstName.value,lastName.value)
 })
 ```
+### defineExpose 子组件暴露属性、方法
+
+```vue
+
+<script setup>
+import {ref, defineExpose} from "vue"
+// 子组件
+const count = ref(100)
+defineExpose({
+	count,
+})
+</script>
+
+// 父组件
+<template>
+  <UserInfo
+    ref="userInfo"
+  ></UserInfo>
+</template>
+<script setup>
+import {onMounted, ref} from 'vue'
+const userInfo = ref(null)
+onMounted(() => {
+	console.log(userInfo.value)
+})
+</script>
+```
