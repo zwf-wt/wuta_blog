@@ -12,6 +12,13 @@ nest g class user -d
 nest g class user -d --no-spec
 
 pnpm start:dev
+
+nest g module user # 生成user模块：组织controller、service、dto、entity等
+nest g controller user --no-spec -d # 生成user控制器: 作用于处理路由
+nest g service user -d # 生成user服务：处理业务逻辑
+
+# webpack 配置 热重载
+npm i --save-dev webpack-node-externals run-script-webpack-plugin webpack
 ```
 ## RESTFUL API
 - 接口的一种风格
