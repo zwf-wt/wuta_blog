@@ -929,3 +929,183 @@ onMounted(() => {
 })
 </script>
 ```
+### ref
+```js
+import { ref, shallowRef, triggerRef, customRef } from 'vue'
+
+// ref: 深层次响应
+// shallowRef: 浅层次响应
+// triggerRef: 强制更新
+// customRef: 自定义ref
+
+function myRef<T>(value: T) {
+  return customRef((track, trigger) => {
+    return {
+      get() {
+        track() // 依赖收集
+        return value
+      },
+      set(newVal) {
+        value = newVal
+        trigger() // 触发更新
+      }
+    }
+  })
+}
+
+const obj = myRef<string>('hello')
+```
+### toRef、toRefs、toRaw
+```js
+// toRef: 只能修改响应式对象的值，视图毫无变化，相当于 es6 的解构
+const man = reactive({name: '张三', age: 18})
+const age = toRef(man, 'age') // 解构， 直接解构的话，会丢失响应式
+
+const {name, age} = toRefs(man) // 解构，直接解构的话，会丢失响应式
+
+
+```
+### compunted
+
+```js
+let firstName = ref('张')
+let lastName = ref('三')
+
+const name = compunted<string>({
+  get() {
+    return '张三'
+  },
+  set(newVal) {
+    console.log(newVal)
+    [firstName.value, lastName.value] = newVal.split('-')
+  }
+})
+
+const changeName = () => {
+  name.value = '李-四'
+}
+
+// 方式二
+let name2 = computed(() => fristName.value + '-' + lastName.value)
+```
+## 源码
+### diff算法
+```
+// 源码地址：runtime-core/renderer.js 1631行左右
+
+// 没有 key 的情况
+// 1. 通过for循环进行patch, 重新渲染元素。新的数据会覆盖旧的数据
+// 2. 删除
+// 3. 新增
+
+// 有 key 的情况：5步
+// 1. 前序遍历对比
+// 2. 尾序遍历对比
+// 3. 新节点如果多出来，就是挂载
+// 4. 旧节点如果多出来，就是卸载
+// 5. 特殊情况乱序
+//    5.1 构建新节点的映射关系
+//    5.2 记录新节点在旧节点中的位置数据，如果有多余的旧节点，则删除
+//        如果新节点不包含旧节点，则旧节点也删除
+//        节点出现交叉，说明是移动，则要去求最长递增子序列
+//    5.3 求最长递增子序列升序（贪心 + 二分）
+//        如果当前遍历的这个节点不在子序列说明要进行移动
+//        如果节点在序列中直接跳过 
+```
+### ref、reactive算法
+```js
+// ref
+// 源码地址：core/packages/reactivity/src/ref.ts 60、70行左右
+// RefImpl
+
+// toRef
+// 源码地址：core/packages/reactivity/src/ref.ts
+// ObjectRefImpl
+
+// reactive
+// 源码地址：core/packages/reactivity/src/reactive.ts
+// createReactiveObject
+
+// computed
+// 源码地址：core/packages/reactivity/src/compunted.ts
+// compuntedRefImpl
+
+```
+## 响应式原理
+vue2 使用的是Object.defineProperty，vue3 使用的是Proxy
+- 2.0的不足
+对象只能支持 设置好的数据，新增的数据需要Vue.set(xxx)，数组只能操作七种方法，修改某一项值无法劫持
+### reactive 和 effect的实现
+```js
+export const reactive = <T extends object>(target: T) => {
+  return new Proxy(target, {
+    get(target, key, receiver) {
+      const res = Reflect.get(target, key, receiver) as Object
+
+      track(target, key)
+
+      return res
+    },
+    set (target, key, value, receiver) {
+      const res = Reflect.set(target, key, value, receiver)
+      
+      trigger(target, key)
+      
+      return res
+
+    }
+  })
+}
+
+reactive({})
+
+let activeEffect
+export const effect = (fn: Function) => {
+  const _effect = function() {
+    activeEffect = _effect
+    fn()
+  }
+
+  _effect()
+}
+
+const targetMap = new WeakMap()
+export const track = (target, key) => {
+  let depsMap = targetMap.get(target)
+
+  if (!depsMap) {
+    depsMap = new Map()
+    targetMap.set(target, depsMap)
+  }
+
+  let deps = depsMap.get(key)
+  if (!deps) {
+    deps = new Set()
+    depsMap.set(key, deps)
+  }
+
+  deps.add(activeEffect)
+}
+
+export const trigger = (target, key) => {
+  const depsMap = targetMap.get(target)
+  const deps = depsMap.get(key)
+
+  deps.forEach(effect => effect())
+}
+
+
+// 测试
+const user = reactive({
+  name: '张三',
+  age: 18
+})
+
+effect(() => {
+  document.querySelector('#app').innerText = user.name
+})
+
+setTimeout(() => {
+  user.name = '李四'
+})
+```
