@@ -161,6 +161,16 @@ function hasOwn (obj, key) {
   return hasOwnProperty.call(obj, key)
 }
 ```
+### 10. 苹果IOS浏览器上时间格式不兼容Date问题
+```js
+const dateStr = '2024-12-17'
+
+// 日期格式不兼容, 如果是低版本的 Safari 会返回Invalid Date
+const date = new Date(dateStr) 
+
+// 解决办法 '2024-12-17' -> '2024/12/17'
+const date = new Date(dateStr.replace(/-/g, '/'))
+```
 ## 模块
 ### 1. depcheck
 > 超级好用的依赖检查工具`depcheck`

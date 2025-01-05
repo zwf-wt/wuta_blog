@@ -901,6 +901,47 @@ watch(
 watchEffect(()=>{
   console.log(firstName.value,lastName.value)
 })
+
+/**
+ * oninvalidate 回调函数, 当被监听的属性发生变化时，
+ * 会先执行 oninvalidate 回调函数，然后再执行 watchEffect 回调函数
+ * */ 
+watchEffect((oninvalidate) => {
+  console.log(firstName.value, lastName.value)
+  oninvalidate(() => {
+    console.log('oninvalidate')
+  })
+})
+
+// 停止监听
+const stop = watchEffect((oninvalidate) => {
+  console.log(firstName.value, lastName.value)
+  oninvalidate(() => {
+    console.log('oninvalidate')
+  })
+})
+const stopWatch = () => stop()
+
+watchEffect((oninvalidate) => {
+  console.log(firstName.value, lastName.value)
+  oninvalidate(() => {
+    console.log('oninvalidate')
+  })
+}, {
+  flush: 'post', // post 表示在组件更新之后执行
+  onTrigger() { // 当被监听的属性发生变化时，会执行 onTrigger 回调函数
+    console.log('onTrigger')
+  }
+})
+
+watch(() => firstName.value, (newValue, oldValue) => {
+  console.log('person的name发生了变化', newValue, oldValue)
+}, {
+  // deep: true, // 深度监听
+  immediate: true // 立即执行
+  flush: 'pre', // pre 表示在组件更新之前执行, sync 表示同步执行, post 表示在组件更新之后执行
+})
+
 ```
 ### defineExpose 子组件暴露属性、方法
 
@@ -1029,6 +1070,9 @@ let name2 = computed(() => fristName.value + '-' + lastName.value)
 // computed
 // 源码地址：core/packages/reactivity/src/compunted.ts
 // compuntedRefImpl
+
+// watch
+// 源码地址：core/runtime-core/src/apiWatch.ts
 
 ```
 ## 响应式原理
