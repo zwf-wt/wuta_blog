@@ -171,6 +171,294 @@ const date = new Date(dateStr)
 // 解决办法 '2024-12-17' -> '2024/12/17'
 const date = new Date(dateStr.replace(/-/g, '/'))
 ```
+### 11. 定高虚拟列表
+
+[原文](https://mp.weixin.qq.com/s/unNbvl6L6vLHXcnyheI1UQ)
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>固定高度虚拟列表</title>
+  <style>
+    .container {
+      border: 1px solid red;
+      height: 100%;
+      overflow: auto;
+      position: relative;
+    }
+
+    .placeholder {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      z-index: -1;
+    }
+
+    .card-item {
+      padding: 10px;
+      color: #777;
+      box-sizing: border-box;
+      border-bottom: 1px solid #e1e1e1;
+    }
+  </style>
+</head>
+<body>
+  <dom id="app">
+    {{ renderList }} {{ renderCount }}
+    <div style="height: 100vh; width: 100vw">
+      <div ref="container" class="container" @scroll="handleScroll">
+        <div
+          class="placeholder"
+          :style="{ height: listHeight + 'px'}"
+        ></div>
+        <div class="list-wrapper" :style="{ transform: getTransform }">
+          <div
+            class="card-item"
+            v-for="item in renderList"
+            :key="item.id"
+            :style="{
+              height: itemSize + 'px',
+              lineHeight: itemSize + 'px',
+            }"
+          >
+            {{ item.value + 1 }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </dom>
+  <script src="./vue.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      name: 'App',
+      computed: {
+        end() {
+          return this.start + this.renderCount
+        },
+        listHeight() {
+          return this.itemSize * this.listData.length
+        },
+        renderCount() {
+          return Math.ceil(this.containerHeight / this.itemSize)
+        },
+        renderList() {
+          return this.listData.slice(this.start, this.end + 1)
+        },
+        getTransform() {
+          return `translate3d(0, ${this.offset}px, 0)`
+        }
+      },
+      data: {
+        itemSize: 100,
+        listData: [],
+        start: 0, // 可视区域内渲染的第一个item的index的值，初始化为0。
+        offset: 0, // 可视区域内渲染的第一个item的偏移量
+        containerHeight: 0,
+      },
+      mounted() {
+        for (let i = 0; i < 1000; i++) {
+          this.listData.push({
+            id: i,
+            value: i
+          })
+        }
+        this.containerHeight = this.$refs.container.clientHeight || 600        
+      },
+      methods: {
+        handleScroll(e) {
+          console.log('handleScroll run')
+          const scrollTop = e.target.scrollTop;
+          this.start = Math.floor(scrollTop / this.itemSize);
+          this.offset = scrollTop - (scrollTop % this.itemSize);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+```
+
+### 12. 不定调虚拟列表
+[原文](https://mp.weixin.qq.com/s/s7lYTKRu-QBlZPWrR7CYdg)
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>不定高虚拟列表</title>
+  <style>
+    .container {
+      border: 1px solid red;
+      height: 100%;
+      overflow: auto;
+      position: relative;
+      width: 600px
+    }
+
+    .placeholder {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      z-index: -1;
+    }
+
+    .card-item {
+      padding: 10px;
+      color: #777;
+      box-sizing: border-box;
+      border-bottom: 1px solid #e1e1e1;
+    }
+  </style>
+</head>
+<body>
+  <dom id="app">
+    <div style="height: 100vh; width: 100vw">
+      <div ref="container" class="container" @scroll="handleScroll">
+        <div
+          class="placeholder"
+          :style="{ height: listHeight + 'px'}"
+        ></div>
+        <div class="list-wrapper" :style="{ transform: getTransform }">
+          <div
+            class="card-item"
+            v-for="item in renderList"
+            :key="item.index"
+            ref="itemRefs"
+            :data-index="item.index"
+          >
+            <span style="color: red">{{ item.index }}</span>
+            {{ item.value }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </dom>
+  <script src="../chajian/vue.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      name: 'App',
+      computed: {
+        end() {
+          return this.start + this.renderCount
+        },
+        renderList() {
+          return this.listData.slice(this.start, this.end + 1)
+        },
+        renderCount() {
+          return Math.ceil(this.containerHeight / this.itemSize)
+        },
+        listHeight() {
+          // return this.itemSize * this.listData.length
+
+          return this.positions.length ? this.positions[this.positions.length - 1].bottom : 0
+        },
+        getTransform() {
+          return `translate3d(0, ${this.offset}px, 0)`
+        }
+      },
+      data: {
+        itemSize: 50,  // 预估item高度，不是真实item高度
+        listData: [], // 列表数据
+        start: 0, // 可视区域内渲染的第一个item的index的值，初始化为0。
+        offset: 0, // 可视区域内渲染的第一个item的偏移量
+        containerHeight: 0,
+        positions: [],
+      },
+      mounted() {
+        
+        const randomStr = () => {
+          // 生成一个0-500之间的随机数作为数组的长度
+          const arrayLength = Math.floor(Math.random() * 501);
+  
+          // 定义可能的字符集：数字加上大小写字母
+          const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ';
+          // 创建指定长度的数组并用随机选择的字符填充
+          const randomArray = Array.from({ length: arrayLength }, () => 
+            characters.charAt(Math.floor(Math.random() * characters.length))
+          );
+
+          return randomArray.join('').trim();
+        }
+        console.log('randomStr ', randomStr())
+        for (let i = 0; i < 1000; i++) {
+          const str = randomStr()
+          this.listData.push({
+            index: i,
+            value: str || '11111111111111111', // randomStr()
+          })
+        }
+        this.containerHeight = this.$refs.container.clientHeight || 600        
+        this.initPosition()
+      },
+      updated() {
+        this.updatePosition()
+      },
+      methods: {
+        handleScroll(e) {
+          console.log('handleScroll run')
+          const scrollTop = e.target.scrollTop;
+          this.start = this.getStart(scrollTop); //  Math.floor(scrollTop / this.itemSize);
+          this.offset = this.positions[this.start].top || 0 // scrollTop - (scrollTop % this.itemSize);
+        },
+        getStart(scrollTop) {
+          let left = 0;
+          let right = this.positions.length - 1;
+          while(left <= right) {
+            const mid = Math.floor((left + right) / 2);
+            if (this.positions[mid].bottom == scrollTop) {
+              return mid + 1;
+            } else if (this.positions[mid].bottom < scrollTop) {
+              left = mid + 1;
+            } else {
+              right = mid - 1
+            }
+          }
+
+          return left;
+        },
+
+        initPosition() {
+          this.positions = [];
+          this.listData.forEach((item, index) => {
+            this.positions.push({
+              index,
+              height: this.itemSize,
+              top: index * this.itemSize,
+              bottom: (index + 1) * this.itemSize,
+            })
+          })
+        },
+
+        updatePosition() {
+          this.$refs.itemRefs.forEach((el, _index) => {
+            const index = +el.getAttribute("data-index")
+            const realHeight = el.getBoundingClientRect().height;
+            let diffVal = this.positions[index].height - realHeight;
+            const curItem = this.positions[index];
+            if (diffVal !== 0) {
+              curItem.height = realHeight;
+              curItem.bottom = curItem.bottom - diffVal;
+              for (let i = index + 1; i < this.positions.length; i++) {
+                this.positions[i].top = this.positions[i].top - diffVal;
+                this.positions[i].bottom = this.positions[i].bottom - diffVal;
+              }
+
+            }
+          })
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+```
 ## 模块
 ### 1. depcheck
 > 超级好用的依赖检查工具`depcheck`
