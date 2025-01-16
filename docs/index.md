@@ -42,5 +42,9 @@ features:
     title: 收集到的文章
     details: 个人收集到文章、笔记、总结、博客
     link: /views/other/collect_article
+  - icon: 📖
+    title: 拽一拽名词
+    details: AI涉及的名词
+    link: /views/artificial-intelligence/noun-explain
 ---
 
