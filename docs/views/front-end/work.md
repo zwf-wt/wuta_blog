@@ -459,6 +459,28 @@ const date = new Date(dateStr.replace(/-/g, '/'))
 </body>
 </html>
 ```
+### 13. 将 hex 转换为 rgb
+```js
+const hexToRgb = (hex) => {
+  // 确保输入的十六进制字符串以 # 开头，如果不是则添加
+  if (hex.charAt(0) !== '#') {
+    hex = '#' + hex;
+  }
+
+  // 移除可能存在的井号并解析为整数
+  let bigint = parseInt(hex.slice(1), 16);
+
+  // 获取红色、绿色和蓝色分量
+  let r = (bigint >> 16) & 255;
+  let g = (bigint >> 8) & 255;
+  let b = bigint & 255;
+
+  // 返回 RGB 字符串或对象
+  return `rgb(${r}, ${g}, ${b})`;
+  // 或者返回对象形式
+  // return {r: r, g: g, b: b};
+}
+```
 ## 模块
 ### 1. depcheck
 > 超级好用的依赖检查工具`depcheck`
