@@ -472,3 +472,65 @@ class AgeException extends RuntimeException {
 |------|------------------------|--------|-----------|
 |throws|异常处理的一种方式       |方法声明处|异常类型|
 |throw |手动生成异常对象的关键字 |方法体中  |异常对象|
+## 包装类
+1. 针对八种基本数据类型定义相应的引用类型——包装类（封装类）
+2. 有了类的特点，就可以调用类中的方法，更方便操作基本数据类型
+3. 包装类都位于java.lang包下
+4. 包装类都是 final 的，因此不能被继承
+5. 包装类都实现了 Serializable 接口
+6. 包装类都是不可变的，即一旦初始化，就不能改变其值
+
+| 基本数据类型 | 包装类|
+|-------------|-------|
+| byte        | Byte  |
+| short       | Short |
+| int         | Integer |
+| long        | Long |
+| float       | Float |
+| double      | Double |
+| char        | Character |
+| boolean     | Boolean |
+###
+
+```java
+public class WrapperType {
+  public static void main(String[] args) {
+    // boolean -> Boolean
+    Boolean a = true;
+
+    // char -> Character
+    Character c = 'c';
+
+    // byte -> Byte
+    Byte b = 1;
+
+    // short -> Short
+    Short s = 1;
+
+    // int -> Integer
+    Integer i = 1;
+
+    // long -> Long
+    Long l = 1L;
+
+    // float -> Float
+    Float f = 1.0f;
+
+    // double -> Double
+    Double d = 1.0;
+
+    // short -> Short
+    Short sh = 1;
+
+    // 自动装箱和自动拆箱
+    // Integer i = 1; // 自动装箱
+    // int j = i; // 自动拆箱
+    // long -> Long
+
+    // float -> Float
+    // double -> Double
+
+    // short -> Short
+  }
+}
+```
