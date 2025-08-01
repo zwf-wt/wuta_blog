@@ -490,7 +490,6 @@ class AgeException extends RuntimeException {
 | double      | Double |
 | char        | Character |
 | boolean     | Boolean |
-###
 
 ```java
 public class WrapperType {
@@ -533,4 +532,317 @@ public class WrapperType {
     // short -> Short
   }
 }
+```
+### 包装类和基本数据的转换
+1. jdk5.0之前，手动装箱和拆箱
+2. jdk5.0之后，自动装箱和拆箱
+3. 自动装箱底层调用的是`valueOf` 方法，比如`Interger.valueOf(1)`
+```java
+
+public class Integer01 {
+  public static void main(String[] args) {
+
+    // jdk5.0之前，手动装箱和拆箱
+    // 手动装箱 int -> Integer
+    int n1 = 100;
+    Integer integer = new Integer(n1);
+    Integer integer1 = Integer.valueOf(n1);
+
+    // 手动拆箱 Interger -> int
+    int i = integer.intValueOf();
+
+
+
+    // jdk5.0之后，自动拆箱和装箱
+    // 自动装箱 int -> Integer
+    int n2 = 200;
+    Integer integer2 = n2; // 底层使用的是 Integer.valueOf(n2);
+
+    // 自动拆箱 Integer -> int
+    int n3 = integer2; // 底层使用的是 intValue();
+
+
+
+
+
+    // 练习题
+    // 1. 下面代码是否正确，为什么？
+    Double d = 100d; 
+    Fload f = 1.5f;
+
+    // 如下两个题目输出结果相同吗？各是什么？
+    Object obj1 = true ? new Integer(1) : new Double(2.0); // 1.0
+
+    Object obj2;
+    if (true) {
+      obj2 = new Integer(1);
+    } else {
+      obj2 = new Double(2.0);
+    }
+    System.out.println(obj1); // 1.0
+    System.out.println(obj2); // 1
+
+
+
+
+    // 包装类型和String类型的相互转换
+    // 包装类型(Integer) -> String
+    Interger i = 100; // 自动装箱
+    // 方式1
+    String str1 = i + "";
+    // 方式2
+    String str2 = i.toString();
+    // 方式3
+    String str3 = String.valueOf(i);
+
+    // String -> 包装类型(Integer)
+    String str4 = "12345";
+    // 方式1
+    Integer i2 = Integer.parseInt(str4);
+    // 方式2
+    Integer i3 = new Integer(str4);
+
+  }
+}
+```
+### Integer类和Character类的常用方法
+```java
+Integer.MIN_VALUE // Integer的最小值
+Integer.MAX_VALUE // Integer的最大值
+
+Character.isDigit('a'); // 判断是否为数字
+Character.isLetter('a'); // 判断是否为字母
+Character.isUpperCase('a'); // 判断是否为大写字母
+Character.isLowerCase('a'); // 判断是否为小写字母
+
+Character.isWhitespace('a'); // 判断是否为空格
+Character.toUpperCase('a'); // 转换为大写字母
+Character.toLowerCase('a'); // 转换为小写字母
+```
+### Interger类面试题
+```java
+/**
+ * 
+ * public static Integer valueOf(int i) {
+ *   if (i >= IntegerCache.low && i <= IntegerCache.high) {
+ *     return IntegerCache.cache[i + (-IntegerCache.low)];
+ *   }
+ *   return new Integer(i);
+ * }
+ * 
+ */
+public void method1() {
+  Integer i = new Integer(1);
+  Integer j = new Integer(1);
+  System.out.println(i == j); // false, 比较的是内存地址
+  
+  // 这里主要看范围 -128 ~ 127，如果在这个范围内，会直接从缓存中获取，所以是相等的
+  Integer m = 1; // 底层，Integer.valueOf(1)
+  Integer n = 1; // 底层，Integer.valueOf(1)
+  System.out.println(m == n); // true
+
+  // 这里主要看范围 -128 ~ 127, 超过这个范围，会重新创建对象，所以是不相等的
+  Integer x = 128;
+  Integer y = 128;
+  System.out.println(x == y); // false
+
+  Integer i1 = new Integer(127);
+  Integer i2 = new Integer(127);
+  System.out.println(i1 == i2); // false
+
+  Integer i3 = new Integer(128);
+  Integer i4 = new Integer(128);
+  System.out.println(i3 == i4); // false
+
+  Integer i5 = 127;
+  Integer i6 = 127;
+  System.out.println(i5 == i6); // true
+
+  Integer i7 = 128;
+  Integer i8 = 128;
+  System.out.println(i7 == i8); // false
+
+  Integer i9 = 127
+  Integer i10 = new Interger(127);
+  System.out.println(i9 == i10); // false
+
+
+  Integer i11 = 127;
+  int i12 = 127;
+  System.out.println(i11 == i12); // true, 只要有基本数据类型，判断的是值是否相同
+
+  Integer i13 = 128;
+  int i14 = 128;
+  System.out.println(i13 == i14); // true, 只要有基本数据类型，判断的是值是否相同
+}
+```
+
+### String类
+1. String 对象用于保存字符串，也就是一组字符序列
+2. 字符串常量对象是用双引号括起的字符序列。例如："hello"、"java" 等
+3. 字符串的字符使用 Unicode 字符集表示，每个字符(不区分字母还是汉字)占用 2 个字节
+4. String类较常用构造方法，构造器的重载
+```java
+String s1 = new String();
+String s2 = new String(String original);
+String s3 = new String(char[] a);
+String s4 = new String(char[] a, int startIndex, int numChars); // 指定范围
+String s5 = new String(byte[] b);
+
+String name = "jack";
+name = "tom";
+```
+5. String 类实现了接口 `Serializable【String】`，可以串行代：可以在网络传输。
+   String 类实现了接口 `Comparable【String】`，可以比较大小
+6. String 是 final 类，不能被其他的类继承
+7. String 有属性 `private final char value[];` 用于存放字符串内容
+8. 一定要注意：`value` 是一个`final`类型，不可能修改
+#### 创建String对象的两种方式
+1. 直接赋值 `String s = "hello";`
+> 先从常量池查看是否有`"hello"`数据空间，如果有，直接指向;如果没有则重新创建，然后指向。s最终指向的是常量池的空间地址
+2. 构造器赋值 `String s = new String("hello");`
+先在堆中创建空间，里面维护了`value`属性，指向常量池的`"hello"`空间, 如果常量池没有`"hello"`，重新创建，如果有，直接通过`value`指向。最终指向的是堆中的空间地址。
+```java
+
+String a = "abc";
+String b = "abc";
+System.out.println(a.equals(b)); // true, 判断的是值是否相同
+System.out.println(a == b); // true, 指向的是同一个地址
+
+String a = "hello";
+String b = new String("hello");
+System.out.println(a.equals(b)); // true
+System.out.println(a == b); // false
+System.out.println(a == b.intern()); // true
+System.out.println(b == b.intern()); // false
+/**
+ * 当调用 intern 方法时，如果池已经包含一个等于此 String 对象的字符串(equals.(Object) 方法确定)则返回池中的字符串。否则，将此 String 对象添加到池中，并返回* 此 String 对象的引用
+ * b.intern()方法最终返回的是常量池的地址(对象)
+ */
+
+
+String s1 = "hello"; // 指向常量池，hello
+String s2 = 'java'; // 指向常量池，java
+String s3 = new String("java"); // 指向堆内存
+String s4 = "java"; // 指向常量池，java
+System.out.println(s2 == s3); // false, s2指向常量池，s3指向堆内存
+System.out.println(s2 == s4); // true, 两个都指向常量池
+System.out.println(s2.equals(s3)); // true, 内容相同
+System.out.println(s1 == s2); // false, s1指向常量池，s2指向常量池
+
+
+
+Person p1 = new Person();
+p1.name= "hspedu";
+Person p2 = new Person();
+p2.name ="hspedu";
+System.out.println(p1.name.equals(p2.name))://比较内容: True
+System.out.println(p1.name ==p2.name)://T 
+System.out.println(p1.name=="hspedu");// T
+String s1 = new String("bcde");
+String s2 = new String("bcde");
+System.out.println(s1==s2); //False
+```
+## 集合
+
+## 泛型
+
+## 多线程
+### 程序
+是为完成特定任务，用某种语言编写的一组指令的集合。简单的说：就是我们写的代码。
+### 进程概念
+1. 进程是批运行中的程序，比如正在使用的微信、QQ、浏览器等，就启动了一个进程，操作系统就会为该进程分配内存空间。当关闭程序时，操作系统就会释放该进程所占用的内存空间。
+2. 进程是程序的一次执行过程，或是正在运行的一个程序。是动态过程：有它自身的产生、存在和消亡的过程。
+### 线程概念
+1. 线程是由进程创建的，是进程的一个实体
+2. 一个进程可以拥有多个线程
+
+### 其他概念
+1. 单线程:同一个时刻，只允许执行一个线程，
+2. 多线程:同一个时刻,可以执行多个线程，比如:一个qq进程，可以同时打开多个聊天窗口，一个迅雷进程，可以同时下载多个文件
+3. 并发:同一个时刻，多个任务交替执行，造成一种“貌似同时”的错觉，简单的说，单核cpu实现的多任务就是并发。
+4. 并行:同一个时刻，多个任务同时执行。多核cpu可以实现并行。
+
+```java
+public class CpuNum {
+  public static void main(String[] args) {
+    Runtime runtime = Runtime.getRuntime();
+
+    // 获取cpu的核数
+    int cpuNums = runtime.availableProcessors();
+  }
+}
+```
+### 线程基本使用
+> 在java中线程使用有两种方法
+1. 继承 `Thread` 类，重写 `run` 方法
+2. 实现 `Runnable` 接口，重写 `run` 方法
+
+```java
+// 1. 请编写程序，并开启一个线程，该线程每隔1秒，在控制台打印一次：`"hello,world"`
+// 2. 当输出超过5次后，结束该线程
+
+public class Thread01 {
+  public static void main(String[] args) {
+    // 创建Cat对象，可以当做线程使用
+    Cat cat = new Cat();
+    /**
+     * public synchronized void start() {
+     *   start0();
+     * }
+     * start0() 是本地望海潮，是JVM调用，底层是C/C++实现
+     * 真正实现多线程的效果是 start0() 底层代码，而不是run
+     * private native void start0();
+     */
+    // cat.start(); // 启动线程，最终会执行cat的run方法
+
+    cat.run(); // run方法就是一个普通的方法，没有真正启动一个线程，就会把run方法执行完比，才向下执行
+    // 说明：当main线程启动一个子线程 Thread-0, 主线程不会阻塞，会继续执行
+    // 这时，主线程和子线程是交替执行...
+    System.out.println("主线程继续执行"+Thread.currentThread().getName());//名字main
+    for(int i=0;i<60;i++){
+      System.out.println("主线程 i="+ i);
+      //让主线程休眠
+      Thread.sleep(1000);
+    }
+  }
+}
+
+/**
+ * 1. 当一个类继承了 Thread 类，该类就可以当做线程使用
+ * 2. 我们会重写 run 方法，把线程要执行的代码，都卸载 run 方法中
+ * 3. run Thread 类实现 Runnable 接口的 run 方法
+ * 
+ * @Override
+ * public void run() {
+ *  if (target != null) {
+ *    target.run();
+ *  }
+ * }
+ */
+class Cat extends Thread {
+  int times = 0;
+  
+  @Override
+  public void run() { // java中实现直正的多线程是 start 中的 start0() 方法，run() 方法只是一个普通的方法
+    while (true) {
+      // 休息(睡眠)一秒
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      System.out.println("hello,world" + (++times));
+
+      if (times == 5) {
+        break;
+      }
+    }
+  }
+}
+
+/**
+ * start 方法调用 start0() 方法后，该线程并不一定会立马执行，只是将线程变成了可运行状态。具
+ * 体什么时候执行，取决于 CPU ，由 CPU统一调度。
+ */
 ```
