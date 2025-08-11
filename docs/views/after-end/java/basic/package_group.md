@@ -696,3 +696,305 @@ public class StringVSStringBuilderVSStringBuffer {
 2. 如果字符串存在大量的修改操作，并在单线程下，一般使用StringBuilder
 3. 如果字符串存在大量的修改操作，并在多线程下，一般使用StringBuffer
 4. 如果字符串很少修改，被多个对象引用，使用String，比如常量池中的字符串
+## Math类
+Math类包用于执行基本数学运算的方法，如初等指数、对数、平方根和三角函数。
+```java
+/**
+ * abs 绝对值
+ * pow 求幂
+ * ceil 向上取整
+ * floor 向上取整
+ * round 四舍五入
+ * sqrt 求开方
+ * random 求随机数
+ * max 求最大值
+ * min 求最小值
+ */
+
+public class MathMethod {
+  public static void main(String[] args) {
+    // 1. abs 绝对值
+    int abs = Math.abs(-1);
+    System.out.println("abs:" + abs); // 1
+
+    // 2. pow 求幂
+    double pow = Math.pow(2, 3);
+    System.out.println("pow:" + pow);  // 8.0
+
+    // 3. ceil 向上取整, 返回>=该参数的最小整数
+    double ceil = Math.ceil(3.14);
+    System.out.println("ceil:" + ceil);  // 4.0
+    System.out.println("ceil:" + Math.ceil(-3.14));  // -3.0
+
+    // 4. floor 向下取整, 返回<=该参数的最大整数
+    double floor = Math.floor(3.14);
+    System.out.println("floor:" + floor);  // 3.0
+    System.out.println("floor:" + Math.floor(-3.14));  // -4.0
+
+    // 5. round 四舍五入
+    double round = Math.round(3.14);
+    System.out.println("round:" + round);  // 3
+    System.out.println("round:" + Math.round(-3.14));  // -3
+
+
+    // 6. sqrt 求开方
+    double sqrt = Math.sqrt(9);
+    System.out.println("sqrt:" + sqrt);  // 3.0
+
+    /**
+     * 7. random 求随机数
+     * random 返回的是 0 <= x < 1 之间的double类型随机小数
+     * 
+     * 请写出获取 a - b 之前的随机整数，a, b 为整数, 比如 a = 2, b = 7
+     * 即返回一个数x。2 <= x < 7
+     * Math.random() * (b -a) 返回的就是0 <= 数 <= b - a
+     * 1. (int)(a) <= x <= (int)(a + Math.random() * (b - a + 1))
+     * 2. a = 2, b = 7
+     * (int)(a + Math.random() * (b - a + 1)) = (int)(2 + Math.random() * (7 -2 + 1)) = (int)(2 + Math.random() * 6)
+     * Math.random() * 6 返回的是 0 <= x < 6 的随机数
+     * 2 + Math.random() * 6 返回的是 2 <= x < 8 的随机数
+     * (int)(2 + Math.random() * 6) 返回的是 2 <= x <= 7 的随机数
+     * 3. 公式就是 (int)(a + Math.random() * (b - a + 1))
+    */
+    for (int i = 0; i < 10; i++) {
+      System.out.println(2 + Math.random() * (7 - 2 + 1));
+    }
+
+    // 8. max, min, 返回最大值和最小值
+    int min = Math.min(1, 2);
+    int max = Math.max(1, 2);
+    System.out.println("min:" + min + ", max:" + max);
+
+}
+```
+
+## Arrays 类
+Arrays 类是 java.util 包下的一个工具类，用来操作数组，它提供的所有方法都是静态的，可以直接使用类名调用。
+1. toString()：将数组转换成字符串
+```java
+Integer[] integers = {1, 20, 90};
+for (int i = 0; i < integers.length; i++) {
+    System.out.println(integers[i]);
+}
+System.out.println("-------------" + Arrays.toString(integers));
+```
+2. sort 排序(自然排序和定制排序)
+```java
+public static void main(String[] args) {
+
+    // 1. toString 返回数据的字符串形式
+    Integer[] integers = {1, 20, 90, -1, 7};
+    /**
+     * 排序
+     * 1. 可以直接使用冒泡排序，也可以直接使用Arrays提供的sort方法排序
+     * 2. 因为数组是引用类型，所以用过sort排序后，会直接影响到 实参 arr
+     * 3. sort是重载的，也可以通过传入一个接口 Comparator 实现定制排序
+     * 4. 调用定制排序时，传入两个参数
+     *  (1). 排序的数据 arr
+     *  (2). 实现 Comparator 接口的匿名内部娄，要求实现 compare 方法
+     * 5. 这里体现了接口编程的方式
+     *  (1). Arrays.sort(arr, new Comparator())
+     *  (2). 最终到 TimeSort 类的 private static <T> void binarySort(T[] a, int lo, Comparator<? supper T c>())
+     *  (3). 执行到 binarySort 方法的代码，会根据动态绑定机制 c.compare() 执行我们传入的匿名内部类的 compare()
+     *      while(left < right) {
+     *          int mid = (left + right) >>>> 1;
+     *          if (c.mare(pivot, a[mid]) < 0)
+     *              right = mid;
+     *          else
+     *              left = mid + 1;
+     *      }
+     *   (4) new Comparator() {
+     *          @Override
+     *          public int compare(Object o1, Object o2) {
+     *              Integer i1 = (Integer) i1;
+     *              Ingeger i2 = (Integer) i2;
+     *
+     *              return i2 - i1;
+     *          }
+     *   }
+     *   (5) public int compare(Object o1, Object o2) {
+     *      // 返回的值 > 0 还是小于0会影响整个排序结果，这就充分体现了 接口编程 + 动态绑定 + 匿名内部类的统合使用
+     *      // 将来的底层框架和源码的使用方式，会非常常见
+     *   }
+     * */
+    Arrays.sort(integers); // 默认排序方法
+    System.out.println("排序后的数据 " + Arrays.toString(integers));
+
+    integers[0] = 100;
+    // 定制排序
+    Arrays.sort(integers, new Comparator() {
+        @Override
+        public int compare(Object o1, Object o2) {
+            Integer i1 = (Integer) o1;
+            Integer i2 = (Integer) o2;
+            return i1 - i2;
+        }
+    });
+    System.out.println("--- 排序后 ------ ");
+    System.out.println(Arrays.toString(integers));
+
+    integers[3] = -30;
+    // 定制排序 + 冒泡排序
+    bubble02(integers, new Comparator() {
+        @Override
+        public int compare(Object o1, Object o2) {
+            int i1 = (Integer) o1;
+            int i2 = (Integer) o2;
+
+            return i1 - i2;
+        }
+    });
+    System.out.println(" 定制排序后 " + Arrays.toString(integers));
+}
+
+public static void bubble02(Integer[] arr, Comparator c) {
+    int temp = 0;
+    for (int i = 0; i < arr.length; i++) {
+        for (int j = 0; j < arr.length - 1 - i; j++) {
+            // 数组排序由 c.compare(arr[j], arr[j + 1]) 返回的值决定
+            if (c.compare(arr[j], arr[j + 1]) > 0) {
+                temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+```
+
+3. binarySearch 二分查找
+```java
+/**
+ * binarySearch 通过二分搜索法进行查找，要求必须排好
+ * 1. 使用 binarySearch 二叉查找
+ * 2. 要求该数组是有序的。如果该数组是无序的。不能使用 binarySearch
+ * 3. 如果数组中不存在该元素，就返回 -(arr.length() + 1)
+ * */
+Integer[] integers = {1, 2, 90, 123, 6};
+
+int index = Arrays.binarySearch(integers, 123);
+System.out.println(" index " + index); // 3
+
+index = Arrays.binarySearch(integers, 567);
+System.out.println(" index " + index); // -6
+```
+4. copyOf 复制数组
+```java
+/**
+ * copyOf 数组元素的复制
+ * 1. 从 arr 数组中，拷贝 arr.length 个元素到 newArr 数组中
+ * 2. 如果拷贝的长度 > arr.length 就在新数组的后面增加 null
+ * 3. 如果拷贝的长度 < 0, 就抛出异常 NegativeArraySizeException
+ * 4. 该方法的底层使用的是 System.arraycopy()
+ * */
+Integer[] arr = {1, 2, 90, 123, 6};
+Integer[] newArr = Arrays.copyOf(arr, 10);
+// newArr = Arrays.copyOf(arr, -1); // 报错
+
+System.out.println("拷贝执行完毕后 " + Arrays.toString(newArr)); // [1, 2, 90, 123, 6, null, null, null, null, null]
+```
+5. fill 数组元素的填充
+```java
+Integer[] num = new Integer[]{9, 3, 2};
+System.out.println("填充之前的数组 =  " + Arrays.toString(num)); // [9, 3, 2]
+
+// 使用 99 去填充 num 数组，可以理解成是替换数组中的元素
+Arrays.fill(num, 99);
+System.out.println("填充之后的数组 =  " + Arrays.toString(num)); // [99, 99, 99]
+```
+6. equals 比较数组元素是否相等
+```java
+Integer[] num = new Integer[]{9, 3, 2};
+
+Integer[] num2 = {1, 2, 90};
+
+// 1. 如果 num 和 num2 的每个元素都相等，那么返回 true
+// 2. 如果不是完全一样，就返回 false
+boolean flag = Arrays.equals(num, num2);
+System.out.println("equals " + flag); // false
+```
+
+7. asList 将数组转为 List 集合
+```java
+/**
+ * 1. asList 方法，会将(2, 3, 4, 5, 6, 1) 转为 List 集合
+ * 2. 返回的 asList 编译类型 List(接口)
+ * 3. asList 运行类型 java.util.Arrays$ArrayList(类), 是 Arrays 的一个静态内部类
+ *    private static class ArrayList<E> extends AbstractList<E> implements RandomAccess, java.io.Serializable
+ */
+List asList = Arrays.asList(2, 3, 4, 5, 6, 1);
+System.out.println("asList = " + asList); // [2, 3, 4, 5, 6, 1]
+System.out.println("asList 的运行类型" + asList.getClass()); // class java.util.Arrays$ArrayList
+
+
+
+/**
+ * 自定义 Book 类，里面包含 name 和 price, 按 price 排序从大到小
+ *
+ */
+
+public class Main {
+  public static void main(String[] args) {
+
+    Book[] books = new Book[4];
+    books[0] = new Book("红楼梦", 100);
+    books[1] = new Book("青年文摘", 90);
+    books[2] = new Book("python", 10);
+    books[3] = new Book("go", 200);
+    System.out.println("排序前的 book " + Arrays.toString(books));
+    Arrays.sort(books, new Comparator() {
+        @Override
+        public int compare(Object o1, Object o2) {
+            // 这里的 o1 和 o2 就是Book对象
+            Book book1 = (Book) o1;
+            Book book2 = (Book) o2;
+            double priceVal = book2.getPrice() - book1.getPrice();
+
+            if (priceVal > 0) {
+                return 1;
+            }
+            if (priceVal < 0) {
+                return -1;
+            }
+
+            return 0;
+        }
+    });
+
+    System.out.println("排序后的 book " + Arrays.toString(books));
+  }
+}
+class Book {
+    private String name;
+    private double price;
+
+    public Book(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "name='" + name + '\'' +
+                ", price=" + price + '}';
+    }
+}
+
+```
