@@ -1086,3 +1086,169 @@ System.out.println(bigDecimal.multiply(bigDecimal2)); // 乘
 // 如果有无限循环小数,就会保留分子的精度
 System.out.println(bigDecimal.divide(bigDecimal2, BigDecimal.ROUND_CEILING)); // 除
 ```
+## 日期时间类
+### 第一代日期类
+1. Date: 精确到毫秒，代表特定的瞬间
+2. SimpleDateFormat: 格式化和解析日期的具体类。它允许进行格式化（也就是日期 -> 文本）、解析（文本 -> 日期）和规范化。
+```java
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class Main {
+  public static void main(String[] args) throws ParseException {
+    /**
+     * 1. 获取当前系统时间
+     * 2. 这里的 Date 类是在java.util包
+     * 3. 默认输出的日期格式是国外的方式，因此通常需要对格式进行转换
+     * */
+    Date d1 = new Date();
+    System.out.println("当期日期" + d1);
+    System.out.println(d1.getTime()); // 获取某个时间对应的毫秒数
+    Date d2 = new Date(9234567); // 通过指定毫秒数得到时间
+    System.out.println("d2 = " + d2);
+
+
+    SimpleDateFormat sdf = new SimpleDateFormat();
+    String format = sdf.format(d1);
+    System.out.println("当前日期 " + format);
+
+    // 1. 创建 SimpleDateFormat 对象，可以指定相应的格式
+    // 2. 这时的格式任县的字母是规定好的，不能乱写
+    sdf = new SimpleDateFormat("YYYY年MM月dd日 hh:mm:ss E");
+    format = sdf.format(d1);
+    System.out.println("当前日期 " + format);
+
+    /**
+     * 1. 可以把一个格式化的String转成对应的 Date
+     * 2. 得到Date仍然在输出时，还是按照国外的形式，如果希望指定格式的输出，需要转换
+     * 3. 在把 String -> Date, 使用的 sdf 格式需要和你给的 String 的格式一样，否则会抛出转换异常
+     * */
+    String s = "1996年01月01日 10:20:30 星期二";
+    Date parse = sdf.parse(s);
+    System.out.println("parse " + parse);
+  }
+}
+```
+### 第二代日期类
+1. 第二代日期类，主要就是`Calendar`类(日历)
+```java
+public abstract class Calendar extends Object implements Serializable, Cloneable, Comparable<Calendar> {
+  
+}
+```
+2. Calendar类是一个抽象类，它为特定瞬间与一级诸如`YEAR`、`MONTH`、`DAY_OF_MONTH`、`HOUR`等日历字段之间的转换提供了一些方法，并为操作日历字段（例如获得下星期的日期）提供了一些方法。
+```java
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+public class Main {
+  public static void main(String[] args) throws ParseException {
+
+    // 第二代日期类
+    /**
+     * 1. Calendar是一个抽象类，并且构造器是private
+     * 2. 可能通过 getInstance() 来获取实例
+     * 3. 提供大量的方法和字段提供使用
+     * */
+    Calendar c = Calendar.getInstance();
+    System.out.println("c = " + c);
+    // 2. 获取日历对象的某个日历字段
+    System.out.println("年： " + c.get(Calendar.YEAR));
+    System.out.println("月： " + (c.get(Calendar.MONDAY) + 1));
+    System.out.println("日： " + c.get(Calendar.DAY_OF_MONTH));
+    System.out.println("小时： " + c.get(Calendar.HOUR));
+    System.out.println("分钟： " + c.get(Calendar.MINUTE));
+    System.out.println("秒： " + c.get(Calendar.SECOND));
+
+    // Canlender 没有专门的格式化方法，所以需要自己来组件显示
+    System.out.println(c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONDAY) + 1) + "-" + c.get(Calendar.DAY_OF_MONTH) + " " + c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND));
+
+  }
+}
+```
+### 第三代日期类
+> 前面两代日期类存在很多问题，所以Java8推出了第三代日期类。
+JDK1.0中包含了一个java.util.Date类，但是它的大多数方法已经在JDK1.1中的Calendar类中取代。而Calendar也存在一些问题。
+1. 可变性：像日期和时间这样的类应该是不可变的，但是Calendar类是可变的，这是Java日期/时间API最大的问题之一。
+2. 偏移性：Date中的年份是从1900开始的，月份是从0开始的，日期是从1开始的，
+3. 格式化：格式化只对Date有用，对Calendar则无效。
+4. 此外，它们也不是线程安全的，不能处理闰秒等(每隔2天，多出1秒)。
+```java
+/**
+ * LocalDate(日期)、LocalTime(时间)、LocalDateTime(日期时间)
+ * LocalDate 只包含日期，可以获取日期字段
+ * LocalTime 只包含时间，可以获取时间字段
+ * LocalDateTime 包含日期和时间，可以获取日期和时间字段
+ */
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+
+public class Main {
+  public static void main(String[] args) throws ParseException {
+    // 第三代日期
+    // 1. 使用now()返回当前日期时间的对象
+    LocalDateTime ldt = LocalDateTime.now(); // LocalDate.now(); // LocalTime.now();
+    System.out.println(ldt);
+    System.out.println("年 = " + ldt.getYear());
+    System.out.println("月 = " + ldt.getMonth());
+    System.out.println("月 = " + ldt.getMonthValue());
+    System.out.println("日 = " + ldt.getDayOfMonth());
+    System.out.println("时 = " + ldt.getHour());
+    System.out.println("分 = " + ldt.getMinute());
+    System.out.println("秒 = " + ldt.getSecond());
+
+    LocalDate now = LocalDate.now();
+    System.out.println(now.getYear());
+
+    // 2. DateTimeFormatter 格式日期类
+    // 类似于SimpleDateFormat
+    LocalDateTime ldt2 = LocalDateTime.now();
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss"); // 格式不能乱写
+    String format2 = dtf.format(ldt2);
+    System.out.println("格式化后的日期 = " + format2);
+
+    /**
+     * 3. 时间戳
+     * 类似于Date，提供了一系列和Date类转换的方式
+     * Instant -----> Date:
+     * Date date = Date.from(instant)
+     * Date --------> Instant:
+     * Instant instant = date.toInstant();
+     * */
+    // 1. 通过静态方法 now()获取表示当前时间戳的对象
+    Instant now2 = Instant.now();
+    System.out.println(now2);
+    // 2. 通过 from 可以把Instant转成Date
+    Date date = Date.from(now2);
+    // 3. 通过date的toInstant() 可以把date 转成Instant对象
+    Instant instant = date.toInstant();
+
+    /**
+     * 4. 第三代日期类更多方法
+     * (1). LocalDateTime类
+     * (2). MonthDay类： 检查重复事件
+     * (3). 是否是闰年
+     * (4). 增加日期的某个部分
+     * (5). 使用 plus 方法测试增加时间的某个部分
+     * (6). 使用 minus 方法测试查看一年前和一年后的日期
+     * */
+
+    // 看看890天后，是什么时候
+    LocalDateTime localDateTime = ldt2.plusDays(890);
+    System.out.println("890天后=" + dtf.format(localDateTime));
+
+    // 看看在 3456分钟前是什么时候，
+    LocalDateTime localDateTime2 = ldt2.minusMinutes(3456);
+    System.out.println("3456分钟前 日期 = " + dtf.format(localDateTime2));
+  }
+}
+```
