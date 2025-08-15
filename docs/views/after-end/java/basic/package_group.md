@@ -1036,3 +1036,53 @@ System.out.println(System.currentTimeMillis());
 // 4. gc: 运行垃圾回收机制 
 System.gc();
 ```
+## BigInteger 和 BigDecimal 类
+1. BigInteger: 适合保存比较大的整型
+2. BigDecimal: 适合保存精度更高的浮点型(小数)
+```java
+/**
+ * add: 加法
+ * subtract: 减法
+ * multiply: 乘法
+ * divide: 除法
+ */
+// 当我们编程中,需要处理很大的整数, long 不够用
+// 可以使用BigInteger类来搞定
+// long l = 23788888888888888888999999999999l; // 编译错误
+// System.out.println("l = " + l);
+
+// 当我们编程中,需要处理很大的整数, long 不够用
+// 可以使用BigInteger类来搞定
+// long l = 23788888888888888888999999999999l;
+// System.out.println("l = " + l);
+
+BigInteger bigI = new BigInteger("23788888888888888888999999999999");
+System.out.println("bigIn + " + bigI);
+
+BigInteger add = bigI.add(bigI); // 加
+System.out.println("add = " + add);
+BigInteger subI = bigI.subtract(bigI); // 减
+System.out.println("subI = " + subI);
+BigInteger multiply = bigI.multiply(bigI); // 乘
+System.out.println("multiply = " + multiply);
+BigInteger divide = bigI.divide(bigI); // 除
+System.out.println("divide = " + divide);
+
+// 当我们需要保存一个精度很高的娄时,double不够用
+// 可以用 BigDecimal
+// double d = 1999.1111111111999999999999998888888887777777777777d;
+// System.out.println(d);
+
+BigDecimal bigDecimal = new BigDecimal("1999.1111111111999999999999998888888887777777777777");
+BigDecimal bigDecimal2 = new BigDecimal("1.1");
+System.out.println(bigDecimal);
+// 1. 如果对 BigDecimal 进行运算,比如加减乘除,需要使用对应的方法
+// 2. 创建一个需要操作的 BigDecimal 然后调用相应的方法即可.
+System.out.println(bigDecimal.add(bigDecimal2)); // 加
+System.out.println(bigDecimal.subtract(bigDecimal2)); // 减
+System.out.println(bigDecimal.multiply(bigDecimal2)); // 乘
+// System.out.println(bigDecimal.divide(bigDecimal2)); // 可以抛出异常ArithmeticException
+// 在调用 divide 方法时,指定精度即可. BigDecimal.ROUND_CEILING
+// 如果有无限循环小数,就会保留分子的精度
+System.out.println(bigDecimal.divide(bigDecimal2, BigDecimal.ROUND_CEILING)); // 除
+```
