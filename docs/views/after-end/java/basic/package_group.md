@@ -1252,3 +1252,212 @@ public class Main {
   }
 }
 ```
+## 练习
+```java
+/**
+ * 1. 将字符串中指定部分进行反转。比如将"abcdef" 反转为"adecbf"
+ */
+public class Main {
+  public static void main(String[] args) throws UnknownHostException {
+    String str = "abcdef";
+    System.out.println("---------- 交换前 --------------");
+    System.out.println("str = " + str);
+    try {
+      str = reverse(str, 1, 4);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+
+      return;
+    }
+
+    System.out.println("----------- 交换后 ---------");
+    System.out.println("str = " + str);
+  }
+
+  public static String reverse(String str, int start, int end) {
+    /**
+     * 对输入的参数做一个验证
+     * 1. 写出正确的情况
+     * 2. 然后取反
+     * */
+    if(!(str != null && start >= 0 && end > start && end < str.length())) {
+      throw new RuntimeException("参数不正确");
+    }
+
+    char[] chars = str.toCharArray();
+    char temp = ' '; // 交换辅助变量
+    for (int i = start, j = end; i < j; i++, j--) {
+      temp = chars[i];
+      chars[i] = chars[j];
+      chars[j] = chars[i];
+    }
+
+    // 使用 chars 重新构建一个String 返回即可
+    return new String(chars);
+  }
+}
+
+/**
+ * 2. 输入用户、密码、邮箱，如果信息录入不正确，则提示注册成功，否则生成异常对象
+ * (1). 用记名长度为2或3或4
+ * (2). 密码的长度必须是6位, 要求全是数字
+ * (3). 邮箱中包含@和. 并且@在.前面
+ */
+
+public class Main2 {
+  public static void main(String[] args) throws UnknownHostException {
+
+    String name = "jack";
+    String pwd = "123456";
+    String email = "jack@sohu.com";
+
+    try {
+      userRegister(name, pwd, email);
+      System.out.println("恭喜你,注册成功");
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+
+  }
+
+  public static void userRegister(String name, String pwd, String email) {
+    int userLength = name.length();
+    if (!(userLength >= 2 && userLength <= 4)) {
+      throw new RuntimeException("用户名长度为2或3或4");
+    }
+
+    if (!(pwd.length() == 6 && isDigital(pwd))) {
+      throw new RuntimeException("密码长度为6, 要求全是数字");
+    }
+
+    int i = email.indexOf("@");
+    int j = email.indexOf(".");
+    if (!(i > 0 && j > i)) {
+      throw new RuntimeException("邮箱中包含@和. 并且@在.前面");
+    }
+
+
+  }
+
+  public static boolean isDigital(String str) {
+    char[] chars = str.toCharArray();
+    for(int i = 0; i < chars.length; i++) {
+      if(chars[i] < '0' || chars[i] > '9') {
+        return false;
+      }
+    }
+
+    return true;
+  }
+}
+
+/**
+ * 3. 输入形式为 "Zhang San Lin"的人名，以"Lin,San .Z"的形式打印出来。其中.Z是中间单词的首字母
+ */
+import java.io.*;
+
+public class Main {
+  public static void main(String[] args) throws Exception {
+    String name = "Zhang San Lin";
+    printName(name);
+  }
+
+  public static void printName(String str) {
+    if (str == null) {
+      System.out.println("str 不能为空");
+      return;
+    }
+
+    String[] names = str.split(" ");
+    if (names.length != 3) {
+      System.out.println("输入的字符串格式不对");
+      return;
+    }
+
+    String format = String.format("%s,%s .%c", names[2], names[0], names[1].toUpperCase().charAt(0));
+
+    System.out.println("format " + format);
+  }
+}
+
+/**
+ * 输入字符串，判断里面有多少个大写字母，多少个小写字母，多少个数字 
+ */
+import java.io.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
+
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+      String str = "abc Qwe 1234U";
+      countStr(str);
+    }
+
+    public static void countStr(String str) {
+      if (str == null) {
+        System.out.println("输入不能为 null");
+        return;
+      }
+
+      int strLen = str.length();
+      int numCount = 0;
+      int lowerCount = 0;
+      int upperCount = 0;
+      int otherCount = 0;
+      for(int i = 0; i < strLen; i++) {
+        if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
+          numCount++;
+        } else if (str.charAt(i) >= 'a' && str.charAt(i) <= 'z') {
+          lowerCount++;
+        } else if (str.charAt(i) >= 'A' && str.charAt(i) <= 'Z') {
+          upperCount++;
+        } else {
+          otherCount++;
+        }
+      }
+
+      System.out.println("数字有 " + numCount);
+      System.out.println("小写字母有 " + lowerCount);
+      System.out.println("大写字母有 " + upperCount);
+      System.out.println("其它有 " + otherCount);
+    }
+}
+
+
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        String s1 = "abc";
+        Animal a = new Animal(s1);
+        Animal b = new Animal(s1);
+        System.out.println("a == b " + (a == b)); // false
+        System.out.println("a.equals(b) " + (a.equals(b))); // false
+        System.out.println("a.name == b.name " + (a.name == b.name)); // true
+
+        String s4 = new String("abc");
+        String s5 = "abc";
+        System.out.println("s1 == s4 " + (s1 == s4)); // false
+        System.out.println("s4 == s5 " + (s4 == s5)); // false
+
+        String t1 = "hello" + s1;
+        String t2 = "helloabc";
+        System.out.println("t1.intern() == t2 " + (t1.intern() == t2)); // true
+
+    }
+}
+
+class Animal {
+    String name;
+
+    public Animal(String name) {
+        this.name = name;
+    }
+}
+
+```
