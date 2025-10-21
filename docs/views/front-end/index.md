@@ -79,6 +79,45 @@
 - 类名较长，增加代码冗长
 - 无法动态生成样式，灵活性低于CSS in Js。
 
+```css
+/* 块 */
+/* 定义： 一个独立的、可复用的功能模块或组件。它代表了 UI 中的一个完整单元。
+特点： 可以嵌套其他 Block，也可以被复用在不同的地方。
+命名规则： 使用小写字母，单词之间用连字符 - 连接。 */
+.header          /* 页头块 */
+.menu           /* 菜单块 */
+.button         /* 按钮块 */
+.card           /* 卡片块 */
+
+
+/* element 元素 */
+/* 定义： 一个 Block 的组成部分，不能脱离 Block 独立存在。
+特点： 它是 Block 的“孩子”，语义上依赖于 Block。
+命名规则： Block名__元素名。使用双下划线 __ 连接 Block 和 Element。 */
+.menu__item      /* 菜单块中的菜单项 */
+.menu__link      /* 菜单块中的链接 */
+.button__text   /* 按钮块中的文字 */
+.card__title     /* 卡片块中的标题 */
+
+/* Modifier (修饰符) */
+/* 定义： 用于定义 Block 或 Element 的外观、状态或行为的变化。
+特点： 它不是一个新组件，而是对现有 Block 或 Element 的“变体”或“状态”。
+命名规则：
+Block名--修饰符名 或 Element名--修饰符名
+使用双连字符 -- 连接。
+修饰符值可以是布尔型（有/无）或键值对型。 */
+
+/* 布尔型修饰符 (表示一种状态) */
+.button--disabled    /* 禁用状态的按钮 */
+.menu__item--active  /* 当前激活的菜单项 */
+
+/* 键值对型修饰符 (表示一种具体值) */
+.button--theme_primary    /* 主题为“primary”的按钮 */
+.button--size_large       /* 尺寸为“large”的按钮 */
+.menu--orientation_vertical /* 垂直方向的菜单 */
+```
+
+
 ### Functional CSS
 - Functional CSS 是一种 CSS 编写风格，通过函数和变量来定义样式。如Tachons
 #### 核心概念
