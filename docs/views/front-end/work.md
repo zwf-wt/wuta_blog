@@ -481,6 +481,25 @@ const hexToRgb = (hex) => {
   // return {r: r, g: g, b: b};
 }
 ```
+### 14. 如何使用 `for` 循环删除数组中的元素
+```js
+const arr = [1, 2, 3, 4, 5];
+
+// 正序遍历
+for (let i = 0; i < arr.length; i++) {
+  if (arr[i] % 2) {
+    arr.splice(i, 1);
+    i--; // 修正索引，因为数组长度已经减少
+  }
+}
+
+// 逆序遍历
+for (let i = arr.length - 1; i >= 0; i--) {
+  if (arr[i] % 2) {
+    arr.splice(i, 1);
+  }
+}
+```
 ## 模块
 ### 1. depcheck
 > 超级好用的依赖检查工具`depcheck`
