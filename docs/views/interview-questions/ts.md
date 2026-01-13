@@ -367,18 +367,23 @@ in 是类型映射操作符，用于遍历联合类型的每个成员，通常�
 type ReadonlyUser<T> = { readonly [P in keyof T]: T[P] }
 ```
 ## 30. 什么是映射类型？TypeScript 内置了哪些常用映射类型？
-映射类型基于已有类型创建新类型，通过 in 和 keyof 实现；内置常用的有 Readonly<T>（只读）、Partial<T>（可选）、Required<T>（必选）、Pick<T, K>（挑选属性）、Record<K, T>（创建对象类型）。
-## 31. Pick<T, K> 和 Omit<T, K> 的区别？举例说明。
-Pick<T, K> 从 T 中挑选 K 对应的属性；Omit<T, K> 从 T 中剔除 K 对应的属性。例：
 ```ts
-interface User { name: string; age: number; id: number }
-type UserName = Pick<User, "name">; // { name: string }
-type UserWithoutId = Omit<User, "id">; // { name: string; age: number }
+// 映射类型基于已有类型创建新类型，通过 in 和 keyof 实现；
+// 内置常用的有 Readonly<T>（只读）、`Partial<T>`（可选）、`Required<T>`（必选）、`Pick<T, K>`（挑选属性）、`Record<K, T>`（创建对象类型）。
 ```
-## 32. Partial<T> 和 Required<T> 的作用分别是什么？
+## 31. `Pick<T, K>` 和 `Omit<T, K>` 的区别？举例说明。
+```ts
+// Pick<T, K> 从 T 中挑选 K 对应的属性；Omit<T, K> 从 T 中剔除 K 对应的属性。例：
+
+// interface User { name: string; age: number; id: number }
+// type UserName = Pick<User, "name">; // { name: string }
+// type UserWithoutId = Omit<User, "id">; // { name: string; age: number }
+
+```
+## 32. `Partial<T>` 和 `Required<T>` 的作用分别是什么？
 Partial<T> 将 T 的所有属性变为可选；Required<T> 将 T 的所有属性变为必选。
-## 33. Record<K, T> 的作用是什么？举例说明。
-Record<K, T> 创建一个对象类型，键的类型为 K，值的类型为 T。例：
+## 33. `Record<K, T>` 的作用是什么？举例说明。
+`Record<K, T>` 创建一个对象类型，键的类型为 K，值的类型为 T。例：
 ```ts
 type Score = Record<"math" | "english", number>;
 const score: Score = { math: 90, english: 85 };

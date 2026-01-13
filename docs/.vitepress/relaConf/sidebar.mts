@@ -514,6 +514,10 @@ export const sidebar: DefaultTheme.Sidebar = {
               link: '/views/interview-questions/js/es6'
             },
             {
+              text: 'ts',
+              link: '/views/interview-questions/ts'
+            },
+            {
               text: '其它',
               link: '/views/interview-questions/js/js'
             },
