@@ -92,7 +92,16 @@ export const sidebar: DefaultTheme.Sidebar = {
             {
               text: '开发一个vite包并发布到npm',
               link: '/views/front-end/vue-series/custom-vite-package'
-            }
+            },
+            {
+              text: 'vue源码',
+              items: [
+                {
+                  text: '介绍',
+                  link: '/views/front-end/vue-series/vue-source-code/index'
+                }
+              ],
+            },
           ]
         },
         {
@@ -298,6 +307,14 @@ export const sidebar: DefaultTheme.Sidebar = {
             {
               text: '枚举',
               link: '/views/after-end/java/basic/enumerate'
+            },
+            {
+              text: '包装类',
+              link: '/views/after-end/java/basic/package_group'
+            },
+            {
+              text: '多线程',
+              link: '/views/after-end/java/basic/multi_thread'
             },
           ]
         },

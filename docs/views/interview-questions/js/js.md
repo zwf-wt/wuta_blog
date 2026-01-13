@@ -130,3 +130,124 @@ TypeScript（简称TS）和JavaScript（简称JS）是两种不同的编程语�
 ## 如何自动检测更新
 1. 使用 websocket 进行通知，但是代价太大，不推荐
 2. 使用轮询。每隔一段时间请求一次`index.html`, 然后比较js文件的hash值，如果不一样，则说明有更新，然后重新加载页面
+## H5如何实现唤起APP
+唤端技术（Deep Linking）是一种在移动端网页中实现直接打开移动应用的功能。以下是实现 H5 唤起 APP 的几种常见方法：
+1. `URL Scheme`: 这是最常见的方法，通过在浏览器中输入特定的 URL Scheme，可以唤起对应的 APP。例如，在 iOS 中，可以通过 `myapp://` 或 `myapp://path` 来唤起 APP；在 Android 中，可以通过 `myapp://path` 来唤起 APP。需要注意的是，URL Scheme 必须在 APP 中注册，否则无法唤起。
+2. `Universal Links`: Universal Links 是 Apple 提供的一种在 iOS 9 及以上版本中实现直接打开 APP 的方法。它通过在 APP 中注册一个唯一的 URL，然后在 H5 页面中通过该 URL 来唤起 APP。需要注意的是，Universal Links 必须在 APP 中注册，并且需要在 H5 页面中添加相应的 meta 标签。
+3. `App Link、Chrome Intents(android)`
+### URL Scheme
+它一般由协议、路径、参数组成。这个一般是由Native提供的
+```js
+// [scheme:][//authority][path][?query][#fragment]
+
+open() {
+  timer = setTimeout(() => {
+    window.location.href = 'http://apps/apple.com/cn/app/id387682726'
+  }, 3000)
+
+  window.location.href = 'snssdk1128://user/profile/3733569708763603'
+}
+```
+## 屏幕截图
+```js
+async function screenShot() {
+  const displayMdeiaOptions = {
+    video: {
+      cursor: 'always'
+    }
+  }
+
+  // 数据流
+  const stream = await navigator.mediaDevices.getDisplayMedia(displayMdeiaOptions)
+
+  // 创建流
+  const video = document.createElement('video')
+  video.srcObject = stream
+  await video.play()
+
+  // 创建画面承载内容
+  const canvas = document.createElement('canvas')
+  canvas.width = video.videoWidth
+  canvas.height = video.videoHeight
+
+  // canvas api 绘制
+  const context = canvas.getContext('2d')
+  context.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+  const base64 = canvas.toDataURL('image/png')
+
+  video.srcObject.getTracks().forEach(track => track.stop())
+
+  return base64
+}
+
+setTimeout(async () => {
+  const base64 = await screenShot()
+  console.log(base64)
+  const img = document.getElementById('img')
+  img.src = base64
+})
+
+```
+## 大数问题
+通过 Number.MAX_VALUE 来判断
+```js
+// 通过第三方库来解决 big.js | bignumber.js
+const big = require('big.js')
+
+const z = big('9999999999999999999999999999999999999999')
+const w = big('9999999999999999999999999999999999999999')
+const result = z.plus(w) // 最终得到的是个字符串
+
+// ES2020 新增了 BigInt, 只是在一下数字后面添加一个，就可以表示 BigInt
+const bigNum = 9007199254740991n + 9007199254740991n // 最终得到的是个 BigInt
+```
+## 页面请求接口大规模并发
+- 并发出现的具体场景和原因
+- 优化接口、利用缓存技术优化高并发场景
+- 利用集群减轻服务器压力
+- 反向代理、负载均衡
+- BFF聚合，利用中间层进行进行接口聚合
+- 协议处理——协议层优化
+  websocket 避免反复建立
+  HTTP2.0 多路复用
+- 前端技术
+  - 缓存
+  - 微前端
+  - SSR技术
+## 网络性能耗时统计
+- 浏览器性能监控 --  PerformanceAPI || Navigation Timing API
+- 请求事件 -- XMLHTTPRequest
+- 个性化定制封装函数
+```js
+const performance = {
+  timings: {},
+  config: {
+    reportUrl: '/report'
+  },
+  init() {
+    window.addEventListener('fetchStart', event => {
+      this.timings[event.detail.id] = {
+        startTime: Date.now()
+      }
+    })
+
+    window.addEventListener('fetchEnd', event => {
+      const id = evnet.detail.id
+      if (this.timings[id]) {
+        const timing = this.timings[id]
+        timing.endTime = Date.now()
+        timing.duration = timing.endTime - timing.startTime
+        const reportData = {
+          url: event.detail.url,
+          method: event.detail.method,
+          duration: timing.duration
+        }
+        this.report(reportData)
+      }
+    })
+    xhr.setRequestHeader('Content-Type', 'application/json')
+    xhr.send(JSON.stringify(data))
+  }
+}
+```

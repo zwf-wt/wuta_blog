@@ -1,6 +1,12 @@
 # 指标
 所有的优化都是为了用户体验考虑的
 
+> 其实前端的优化，整体粗略概括下来：
+1. 打开速度怎么变快
+2. 再次打开速度怎么变快
+3. 操作怎么才顺滑
+4. 动画怎么保证流畅
+
 ## 1. 指标
 
 ### 1. 常规指标
@@ -12,7 +18,7 @@
 指浏览器完成渲染 DOM 中第一个内容的时间点，这个元素可以是任何文本、图像、SVG 或者其他任何元素，此时用户应该在视觉上有直观的感受
 
 3. FMP: first meaningful paint: 首次有意义绘制时间
-指页面关镇元素渲染时间。这个概念并没有标准化定义，因为关键元素可以由开发者自己定义， 究竟什么是"有意义"的内容，只有开发者或者产品经理自己了解
+指页面关键元素渲染时间。这个概念并没有标准化定义，因为关键元素可以由开发者自己定义， 究竟什么是"有意义"的内容，只有开发者或者产品经理自己了解
 
 4. TTI: time to interactive: 可交互时间
 顾名思义，也就是用户可以下应用进行交互的时间。一般来说，我们认为为 domready 的时间，因为我们通常会在这时候绑定事件操作。如果页面中涉及交互的脚本没有下载完成，那么当然没有到达所谓的用户可交互时间。那么如何定义 domready 时间呢？
@@ -28,12 +34,14 @@ TTFB 是发出页面请求到接收到就答数据第一个字节所花费的毫
 8. CLS: cumulative layout shift: 累积布局偏移
 衡量视觉稳定性，表示页面的整个生命周期中，发生的每个意外的样式移动的所有单独布局更改得分的总和。所以这个分数当然越小越好。
 
-9. TBT: total blocking time: 总阻塞
+9. TBT: total blocking time: 总阻塞，从FCP到TTI之间的时间，这段时间内主线程被阻塞，无法响应用户输入。
 
 
 10. DCL: dom content loaded: 首次渲染时间
 
 11. L: DOM onLoad
+
+13. INP: interaction to next paint: 用户交互到页面响应的时间
 
 12 . 总下载时间
 页面所有资源加载完成所需要的时间。一般可以统计 window.onload 事件触发的时间, 这样可以统计出同步加载的资源全部加载完的耗时。如果页面存在较多异步渲染，也可以将异步渲染全部完成的时间作为总下载时间
@@ -293,3 +301,72 @@ data Object.freeze()
 ### 维度4： CPU的维度
 密集计算，能不能用WebAss, Web wroker
 后端同学，能不能算好了再给我？
+
+## 性能优化——术
+### 首屏加载优化
+> 首屏加载是用户访问网页的第一印象，优化这一环节可以显著提升用户体验。以下是我采取的一些优化措施：
+#### 首屏性能指标
+> FP、FCP、FMP、LCP、INP、TTI、TBT、CLS、TTFB。以上指标可以通过`Performance`工具和 `web-vitals`进行数据收集和分析。
+1. FP ~ FCP中间的时间其实就是`SPA`应用`JS`执行，太慢就会有白屏时间
+2. TTI: 如果项目是SSR的话，一定要注意这个指标，由于后端会返回整个HTML片段字符串，页面可以一下了渲染出来，但是某些事件还没有绑定上，这个时候就需要单独运算某些JS文件来实现事件绑定，这个中间会有`空白时间`
+#### 体积瘦身
+1. 优化图片，使用`webp`格式, 图片压缩，图片尺寸(在合适的容器内用合适的尺寸图片，例如1倍图、2倍图、3位、倍图)
+2. 字体瘦身，设计型产品，字体子集化(用了哪些字，就最后只生成对应字的字体文件) Fontmin
+3. CSS、JS文件压缩，打包构建阶段完成(terser)
+  - 代码压缩
+  - 文件合并
+  - Tree Shaking
+  - 动态加载
+5. Gzip压缩、Brotli压缩
+6. SSR、SSG
+### 动画卡顿优化
+> 为什么会卡顿
+**单线程**，阻塞
+1. 减少主线程阻塞
+  - 优化JS执行，减少长任务执行(复杂的计算【web worker、将任务切分(react Scheduler)】)
+2. GPU加速
+  - css 属性(transform、opacity、backface-visibility)
+  - 避免引起重排的属性(定位left、top)
+3. requestAnimationFrame：将任务切分，在每一帧空闲时间执行任务
+4. 节流防抖
+### 应用视图层更新优化
+#### React 的视图更新优化
+1. 使用 React.memo 防止不必要的更新渲染
+- 对函数组件进行包裹，只有当props发生变化时才会重新渲染组件
+```js
+const MyComponent = React.memo(({data}) => {
+  return <div>{data}</div>
+})
+```
+2. useMemo和useCallback的优化
+- 使用 useMemo 缓存复杂
+### 应用状态管理优化
+#### React 状态管理
+1. 减少全局状态的依赖
+- 将状态尽可能局部化，避免使用全局状态(如Redux或Context)管理所有数据
+- 对于仅用于局部组件的状态，使用组件内部的useState或useReducer
+2. 优化Context的性能
+- Context的更新会重新渲染所有订阅的组件。
+- 解决方案：拆分Context，将不同的逻辑存储在多个Context中，降低重新渲染范围。
+3. 使用高效的状态管理库
+- 使用轻量、高性能的状态管理工具，如Zustand、Jotai或Recoil,它们具备更细粒度的状态更新机制
+```js
+import create from 'zustand';
+
+const useStore = create((set) => ({
+  count: 0,
+  increment: () => set((state) => ({ count: state.count + 1 })),
+}))
+
+const Counter = () => {
+  const count = useStore((state) => state.count);
+  const increment = useStore(state => state.increment);
+  return <button onClick={increment}>Count:{count}</button>
+}
+```
+4. 避免不必要的状态更新
+- 使用不可变数据结构(如immer)管理状态，减少对数据的直接修改
+```js
+
+```
+### 事件和渲染细节优化
