@@ -371,23 +371,6 @@ type ReadonlyUser<T> = { readonly [P in keyof T]: T[P] }
 // 映射类型基于已有类型创建新类型，通过 in 和 keyof 实现；
 // 内置常用的有 Readonly<T>（只读）、`Partial<T>`（可选）、`Required<T>`（必选）、`Pick<T, K>`（挑选属性）、`Record<K, T>`（创建对象类型）。
 ```
-## 31. `Pick<T, K>` 和 `Omit<T, K>` 的区别？举例说明。
-```ts
-// Pick<T, K> 从 T 中挑选 K 对应的属性；Omit<T, K> 从 T 中剔除 K 对应的属性。例：
-
-// interface User { name: string; age: number; id: number }
-// type UserName = Pick<User, "name">; // { name: string }
-// type UserWithoutId = Omit<User, "id">; // { name: string; age: number }
-
-```
-## 32. `Partial<T>` 和 `Required<T>` 的作用分别是什么？
-Partial<T> 将 T 的所有属性变为可选；Required<T> 将 T 的所有属性变为必选。
-## 33. `Record<K, T>` 的作用是什么？举例说明。
-`Record<K, T>` 创建一个对象类型，键的类型为 K，值的类型为 T。例：
-```ts
-type Score = Record<"math" | "english", number>;
-const score: Score = { math: 90, english: 85 };
-```
 ## 34. 什么是类型守卫？常见的类型守卫方式有哪些？
 类型守卫是在代码块内收窄变量类型的手段，让编译器识别变量具体类型；
 常见方式：
@@ -416,28 +399,7 @@ function petFn(pet: Dog | Cat) {
   if ("bark" in pet) pet.bark(); // pet 收窄为 Dog
 }
 ```
-## 39. unknown 类型和 any 类型的区别？如何安全使用 unknown？
-unknown 是类型安全的 any，可以被任意类型赋值，但不能直接赋值给其他类型（除 any/unknown），也不能直接调用属性 / 方法；使用时需通过类型守卫或类型断言收窄类型。
-## 40. 什么是装饰器？TypeScript 中如何启用装饰器？
-装饰器是一种特殊的声明，可附加到类、方法、属性、参数上，用于修改类的行为；需在 tsconfig.json 中配置 experimentalDecorators: true 启用。
 
-## 41. 类装饰器的作用是什么？举例说明。
-类装饰器用于修改或增强类的定义，接收类的构造函数作为参数。例：
-```ts
-function logClass(target: Function) {
-  target.prototype.log = () => console.log("hello");
-}
-@logClass
-class User {}
-new User().log(); // hello
-```
-## 42. TypeScript 中如何处理异步函数的类型？
-异步函数的返回值类型是 Promise<T>，T 是 await 后得到的类型。例：
-```ts
-async function fetchData(): Promise<string> {
-  return await Promise.resolve("data");
-}
-```
 ## 43. 如何在 TypeScript 中使用第三方库？如果库没有类型定义怎么办？
 1. 安装库的类型定义包（@types/xxx）；
 2. 若没有类型定义，可手动创建 .d.ts 声明文件；
