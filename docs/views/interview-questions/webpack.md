@@ -161,3 +161,313 @@ commonjs 模块是运行时加载，es6 模块是编译时输出接
 
 22. 避免不必要的loader处理：仔细选择需要的loader，避免过多或不必要的loader处理。
 > 这只是一些常见的Webpack优化策略，具体的优化方法和策略会根据项目的需求和特点有所差异。在进行优化时，可以结合使用Webpack的相关插件和工具，以及借助性能分析工具（如Webpack Bundle Analyzer）来帮助定位和解决性能瓶颈
+
+## 9. webpack的配置有哪些？
+webpack的配置主要包括以下几个部分：
+- **entry**: 入口文件地址。可以是单个，可以是多外。
+- **output**: 输出的内容，path, filename, publicPath等。
+- **module**: 模块配置，包括rules，loader等。
+- **plugins**: 对打包流程的干预和增加
+- **resolve**: 别名，扩展名等
+- **extensions**: 外部扩展名
+- **devServer**: 开发服务器配置
+- **optimization**: 拆chunk, cacheGroup
+- stats: 打包状态
+- context: 上下文
+- performance: 性能
+- target: 打包目标
+- mode: 模式
+## 10. 口喷一下配置
+```js
+const path = require('path')
+
+module.exports = {
+    mode: 'development',
+    entry: path.resolve(__dirname, '../src/index.js'),
+    output: {
+        path: path.resolve(__dirname, '../dist'),
+        filename: 'main.[chuckhash:8].js',
+        publicPath: './',
+        clearn: true
+    },
+    resolve: {
+        extensions: ['.js', '.jsx', '.json'],
+    },
+    module: {
+        rules: [
+            {
+                test: /\.(js|jsx)$/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        persets: ['@babel/preset-env', '@babel/preset-react']
+                    }
+                }
+            },
+            {
+                test: /\.(css|less)$/,
+                use: ['style-loader', 'css-loader', 'less-loader']
+            },
+            {
+                test: /\.(png|jpg)$/,
+                generator: {
+                    filename: 'static/assets/[name].[contenthash:8].[ext]'
+                }
+            },
+        ]
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: path.resolve(__dirname, '../public/index.html')
+        })
+    ]
+}
+```
+### 11. 有哪些常见的loader，它们的作用是什么？
+- `babel-loader`: 使用 babel的能力，处理js代码 @babel/core
+- `vue-loader`: 处理vue文件
+- `ts-loader`: 处理ts文件
+
+- `style-loader`: 将css文件以style标签的形式插入到html中
+- `css-loader`: 处理css文件中的url()等 css module
+- `less-loader`: 处理less文件
+- `sass-loader`: 处理sass文件
+- `postcss-loader`: 使用postcss插件转换css
+- `file-loader`: 处理文件路径，将文件赋值到输出目录
+- `url-loader`: 处理文件大小，是转换成base64,还是直接拷贝。小于limit的文件会返回DataURL
+
+## 有哪些常见的 plugin, 它们的作用是什么？
+- `html-webpack-plugin`: 基于 html 模板生成对应的文件和引用关系，构建运行时产物
+- `clean-webpack-plugin`: 清理构建产物
+- `mini-css-extract-plugin`: 将css提取成单独的文件
+- `css-minimizer-webpack-plugin`: 压缩css
+- `terser-webpack-plugin`: 压缩js
+- `uglifyjs-webpack-plugin`: 
+- `define-webpack-plugin`: 定义全局变量，css主题
+- `bundle-analyzer-webpack-plugin`: 打包分析
+- `copy-webpack-plugin`: 拷贝文件
+
+## loader 和 plugin 的区别是什么？
+- loader: 转换器，核心是解析
+webpack 没有loader的话，只能打包基础的cjs的js文件，对于css，静态资源是无法实现打包的，这时候就需要引入一些loader来进行文件的处理，更多的是，文件**转换器**
+- plugin: 插件扩展器，核心是扩展，扩展webpack的能力，比如打包优化，资源管理和环境变量注入等，目的是解决loader无法实现的其他事. 在webpack的运行周期里，会有一些hooks对外暴露，所以在webpack打包编译的过程中，plugin会根据这些hooks执行一些自定义的操作。来实现对输出结果的干预的增强。
+
+区别：
+loader 更专注于文件的转换，**是转换器**，让webpack处理非js模块，一般在固定的流程(打包文件之前)起作用
+plugin 更专注于流程的扩展，**是扩展器**，让输出资源的能力更丰富。在整个生命周期里，都起作用。
+
+## 14. babel-loader 常见的配置
+### 方案一：
+```js
+{
+    test: /\.(.jsx|.tst|.js|.ts)$/,
+    use: {
+        loader: 'babel-loader',
+        options: {
+            presets: [
+                [
+                    '@babel/preset-env',
+                    {
+                        targets: {
+                            chrome: '60',
+                        },
+                        useBuiltIns: 'usage',
+                        corejs: 3
+                    }
+                ],
+                '@babel/preset-react',
+                '@babel/preset-typescript'
+            ],
+        },
+        plutins: [
+
+        ]
+    }
+}
+
+
+
+// {
+//     presets: [
+//         '@babel/preset-env',
+//         '@babel/preset-react',
+//         '@babel/preset-typescript'
+//     ]
+// }
+```
+### 方案二：
+独立出来.babellc或者babel.config.js配置presets和plugins
+
+## 15. webpack的指纹占位符
+
+```js
+filename: 'main.[chunkhash:8].js'
+filename: 'static/asserts/[name].[contenthash:8].[ext]'
+```
+ext: 资源的后缀名
+name: 资源的名字
+path: 文件的相对路径
+folder: 文件所在的文件夹
+
+hash: 每次构建的时候，任何一点改动，整个项目的hash值都会变
+chunkhash: 只在当前chunk发生变化的时候，hash值才会变
+contenthash: 文件内容发生变化的时候，hash值才会变
+    - 静态资源，也是缓存下来的。
+## 16. webpack的构建流程
+1. 初始化各种参数，读取配置文件，进行解析。merge..., 形成标准化的配置
+2. 开始编译：complile 对象初始化，注册所有的配置插件，执行run方法开始编译
+3. 从entry 开始，读取所有的依赖树，形成AST，不断地递归下去进行处理。
+4. 文件编译：根据文件正则所匹配对应的loader, 进行文件转换
+5. 形成一个整体的资源树，完成模块的编译
+6. 输出资源：根据入口和模块的关系，组成一个个的chunk,再把每个chunk转换成单独的文件，准备输出
+7. 输出完成。根据output配置的内容，把文件最后写入到磁盘
+
+## 17. bundle, chunk, module 的区别
+### module 模块
+- 从构建的角度来说，一个文件，或者肉片高内聚的文件，就是一个module
+
+### chunk
+- 一般是指一个构建流程的产物，代表着一个静态分析的过程，从入口如何形成一整个依赖树。形成了一个chunk
+- split chunk
+
+### boundle 包
+- 一般是指，我最后的产物，main.xxx.js,我要把所有的文件合并在一起，最后形成一个bundle.js
+
+bundle ---> xxx.js, xxx.css index.html
+bundleless
+    -> 
+        - card
+        - button
+        - menu
+        - input
+        - form
+## 18. webpack的tree shaking的原理
+简单来说有三种：
+- usedExports: 我在静态分析的过程中，会有一些导入了，但是没有用过的东西。可以直接删除
+- sideEffects: 删除模块中导出了，但是未被使用的变量
+- dead code elimination: 删除模块中，执行不到的代码,最终在产物里，删除一些死代码。
+
+## 19. 如何提高webpack的构建速度
+- 使用多进程打包：使用thread-loader, happypack等工具，将构建的流程分解为多个进行或线程去处理。esbuild,swc相关
+- 使用dllPlugin将第三方库预先进行打包，减少构建
+- 使用 HardSourceWebpackPlugin, 缓存一些中间文件，加速后续的构建流程
+- 使用tree shaking
+- 移除一些不必要的配置
+    - 不必须的插件，不适用
+    - loader 写得更清楚一些，.css文件，就不要用less-loader
+    - extensions等缩写的顺序，尽量把常见的后缀，放前面一些。
+    - oneof 
+- cache-loader, 可以启动缓存loader
+
+1. 不要不清晰，让工具反复查找
+2. 使得缓存，不做重复的事情
+3. 使用并行，空间换时间
+
+## 20. 如何减少webpack打包后的体积/性能优化
+1. code spliting
+    1. 非首屏加载的数据，先排除掉
+2. tree shaking
+    1. 没用的，先干掉
+3. 压缩代码
+    1. css压缩
+    2. js压缩
+```js
+optimization: {
+    minimize: true,
+    minimizer: [
+        new CssMinimizerPlugin(),
+        new TerserPlugin(),
+    ]
+}
+```
+4. 压缩图片
+5. 按需引入 
+    1. babel的编译，useBuiltIns的配置，在不同的浏览器，按需引入 polyfill
+5. CDN加速
+    1. 用户的一引起react, vue，比较大的第三方，在用户处缓存起来。
+
+## 21. 写一个loader
+```js
+// style-loader.js
+module.exports = function style_loader(resource, map) {
+    const style = `document.createElement('style');
+    style.innerHTML = ${JSON.stringfy(resource)};
+    document.head.appendChild(style)`;
+    return style;
+}
+
+const less = require('less');
+module.exports = function less_loader(resource, map) {
+    const callback = this.async();
+
+    less.render(resource, { sourceMap: {} }, function(err, res) {
+        let { css, map } = res;
+        callback(null, css, map);
+    })
+}
+```
+
+## 22. 写一个css-loader的配置
+```js
+module: {
+    rules: [
+        {
+            // 提高效率，所以使用oneOf
+            oneOf: [
+                {
+                    test: /\.module\.(less|css)$/,
+                    includes: [path.resolve(__dirname, 'src')],
+                    use: [
+                        isDev ? 'style-loader': MiniCssExtractPlugin.loader,
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                modules: {
+                                    localIdentName: '[path][name]__[local]--[hash:base64:5]'
+                                }
+                            }
+                        },
+                        "less-loader",
+                        "postcss-loader"
+                    ]
+                }
+            ]
+        }
+    ]
+}
+```
+### 23. 写一个plugin
+```js
+
+// new ZipPlugin({filename: 'xxx.zip'})
+const JSZip = require('jszip');
+const { RawSource } = require('weback-sources');
+class ZipPlugin {
+    constructor(options) {
+        this.options = options;
+    }
+
+    apply(compiler) {
+        let context = this;
+        compiler.hooks.emit.tapAsync('zipPlugin', (compilation, callback) => {
+            const assets = compilation.assets;
+
+            const zip = new JSZip();
+
+            // emit 阶段
+            Object.keys(assets).forEach((fileName) => {
+                const source = assets[fileName].source();
+
+                zip.file(fileName, source);
+            })
+
+            zip.generateAsync({
+                type: 'nodebuffer'
+            }).then(res => {
+                compilation.assets[context.options.filename] = new RawSource(res);
+                callback();
+            })
+        })
+    }
+}
+```
